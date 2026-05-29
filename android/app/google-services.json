@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1022112141653",
+    "project_id": "live-order-4f050",
+    "storage_bucket": "live-order-4f050.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022112141653:android:4802c96d123e0028881fdc",
+        "android_client_info": {
+          "package_name": "com.abdallah.example_google_map"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlycQkk1yWXVXwcpBCK3MgrCgBwmT2kLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022112141653:android:fb1b7561ab873c30881fdc",
+        "android_client_info": {
+          "package_name": "com.example.live_order"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlycQkk1yWXVXwcpBCK3MgrCgBwmT2kLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
