@@ -1,14 +1,15 @@
+import 'dart:io';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:live_order/core/styling/app_assets.dart';
-import 'package:live_order/core/styling/app_colors.dart';
-import 'package:live_order/core/styling/app_styles.dart';
-import 'package:live_order/core/widgets/custom_text_field.dart';
-import 'package:live_order/core/widgets/primay_button_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:live_order/core/constants/app_design.dart';
+import 'package:live_order/core/utils/animated_snack_dialog.dart';
+import 'package:live_order/core/widgets/auth_background.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:live_order/features/auth/widget/register_form.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,12 +18,32 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen>
+    with SingleTickerProviderStateMixin {
   final formKey = GlobalKey<FormState>();
+  final _picker = ImagePicker();
   late TextEditingController email;
   late TextEditingController username;
   late TextEditingController password;
   late TextEditingController confirmPassword;
+  late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+  late TextEditingController _vehicleTypeController;
+  late TextEditingController _vehiclePlateController;
+  late TextEditingController _vehicleCapacityController;
+  late TextEditingController _nationalIdController;
+  late TextEditingController _licenseNumberController;
+
+  String _selectedRole = 'client';
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  late AnimationController _fadeController;
+
+  File? _driverImage;
+  File? _idFrontImage;
+  File? _idBackImage;
+  File? _licenseImage;
+  File? _vehicleImage;
 
   @override
   void initState() {
@@ -31,181 +52,195 @@ class _RegisterScreenState extends State<RegisterScreen> {
     password = TextEditingController();
     email = TextEditingController();
     confirmPassword = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+    _vehicleTypeController = TextEditingController();
+    _vehiclePlateController = TextEditingController();
+    _vehicleCapacityController = TextEditingController();
+    _nationalIdController = TextEditingController();
+    _licenseNumberController = TextEditingController();
+
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeController.forward();
+  }
+
+  Future<void> _pickImage(void Function(File) onPicked) async {
+    final xFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (xFile != null) {
+      setState(() => onPicked(File(xFile.path)));
+    }
+  }
+
+  @override
+  void dispose() {
+    username.dispose();
+    password.dispose();
+    email.dispose();
+    confirmPassword.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _vehicleTypeController.dispose();
+    _vehiclePlateController.dispose();
+    _vehicleCapacityController.dispose();
+    _nationalIdController.dispose();
+    _licenseNumberController.dispose();
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  void _onRegister() {
+    if (!formKey.currentState!.validate()) return;
+    context.read<AuthCubit>().register(
+      email: email.text.trim(),
+      password: password.text,
+      username: username.text.trim(),
+      role: _selectedRole,
+      phone: _selectedRole == 'driver' ? _phoneController.text.trim() : null,
+      address: _addressController.text.trim(),
+      vehicleType: _selectedRole == 'driver' ? _vehicleTypeController.text.trim() : null,
+      vehiclePlate: _selectedRole == 'driver' ? _vehiclePlateController.text.trim() : null,
+      vehicleCapacity: _selectedRole == 'driver' ? _vehicleCapacityController.text.trim() : null,
+      nationalId: _selectedRole == 'driver' ? _nationalIdController.text.trim() : null,
+      licenseNumber: _selectedRole == 'driver' ? _licenseNumberController.text.trim() : null,
+      driverImage: _selectedRole == 'driver' ? _driverImage : null,
+      idFrontImage: _selectedRole == 'driver' ? _idFrontImage : null,
+      idBackImage: _selectedRole == 'driver' ? _idBackImage : null,
+      licenseImage: _selectedRole == 'driver' ? _licenseImage : null,
+      vehicleImage: _selectedRole == 'driver' ? _vehicleImage : null,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 22.w),
-            child: Form(
-              key: formKey,
-              child: BlocConsumer<AuthCubit, AuthState>(
-                listenWhen: (previous, current) =>
-                    current is AuthError ||
-                    current is AuthRegisterSuccess ||
-                    current is AuthLoadind,
-                listener: (context, state) {
-                  if (state is AuthError) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(state.message)));
-                  } else if (state is AuthRegisterSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Account created successfully"),
-                      ),
-                    );
-                    context.pop();
-                  }
-                },
-                builder: (context, state) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const HeightSpace(28),
-                      SizedBox(
-                        width: 335.w,
-                        child: Text(
-                          "Create an account",
-                          style: AppStyles.primaryHeadLinesStyle,
-                        ),
-                      ),
-                      const HeightSpace(8),
-                      SizedBox(
-                        width: 335.w,
-                        child: Text(
-                          "Let’s create your account.",
-                          style: AppStyles.grey12MediumStyle,
-                        ),
-                      ),
-                      const HeightSpace(20),
-                      Center(
-                        child: Image.asset(
-                          AppAssets.logo,
-                          width: 190.w,
-                          height: 190.w,
-                        ),
-                      ),
-                      const HeightSpace(32),
-                      Text("User Name", style: AppStyles.black16w500Style),
-                      const HeightSpace(8),
-                      CustomTextField(
-                        controller: username,
-                        hintText: "Enter Your User Name",
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Your User Name";
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            AuthBackground(animation: _fadeController),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+                  child: FadeTransition(
+                    opacity: _fadeController,
+                    child: Form(
+                      key: formKey,
+                      child: BlocConsumer<AuthCubit, AuthState>(
+                        listenWhen: (previous, current) =>
+                            current is AuthError || current is AuthRegisterSuccess || current is AuthLoadind,
+                        listener: (context, state) {
+                          if (state is AuthError) {
+                            showAnimatedSnackDialog(
+                              context,
+                              message: 'فشل إنشاء الحساب: ${state.message}',
+                              type: AnimatedSnackBarType.error,
+                            );
+                          } else if (state is AuthRegisterSuccess) {
+                            showAnimatedSnackDialog(
+                              context,
+                              message: 'تم إنشاء حسابك بنجاح! يمكنك الآن تسجيل الدخول.',
+                              type: AnimatedSnackBarType.success,
+                            );
+                            Navigator.pop(context);
                           }
-                          return null;
                         },
-                      ),
-                      const HeightSpace(16),
-                      Text("Email", style: AppStyles.black16w500Style),
-                      CustomTextField(
-                        controller: email,
-                        hintText: "Enter Your Email",
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Your Email";
-                          }
-                          return null;
-                        },
-                      ),
-                      const HeightSpace(16),
-                      Text("Password", style: AppStyles.black16w500Style),
-                      const HeightSpace(8),
-                      CustomTextField(
-                        hintText: "Enter Your Password",
-                        controller: password,
-                        suffixIcon: Icon(
-                          Icons.remove_red_eye,
-                          color: AppColors.greyColor,
-                          size: 20.sp,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Your Password";
-                          }
-                          if (value.length < 8) {
-                            return "Password must be at least 8 characters";
-                          }
-                          return null;
-                        },
-                      ),
-                      const HeightSpace(16),
-                      Text(
-                        "Confirm Password",
-                        style: AppStyles.black16w500Style,
-                      ),
-                      const HeightSpace(8),
-                      CustomTextField(
-                        hintText: "Enter Your Password",
-                        controller: confirmPassword,
-                        suffixIcon: Icon(
-                          Icons.remove_red_eye,
-                          color: AppColors.greyColor,
-                          size: 20.sp,
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Your Password";
-                          }
-                          if (value.length < 8) {
-                            return "Password must be at least 8 characters";
-                          }
-                          if (value != password.text) {
-                            return "Password does not match";
-                          }
-                          return null;
-                        },
-                      ),
-                      const HeightSpace(55),
-                      state is AuthLoadind
-                          ? const Center(child: CircularProgressIndicator())
-                          : PrimayButtonWidget(
-                              buttonText: "Create Account",
-                              onPress: () {
-                                if (formKey.currentState!.validate()) {
-                                  context.read<AuthCubit>().register(
-                                    email: email.text,
-                                    password: password.text,
-                                    username: username.text,
-                                  );
-                                }
-                              },
-                            ),
-                      const HeightSpace(8),
-                      Center(
-                        child: InkWell(
-                          onTap: () {
-                            context.pop();
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: "Do you have account? ",
-                              style: AppStyles.black16w500Style.copyWith(
-                                color: AppColors.secondaryColor,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: "Login",
-                                  style: AppStyles.black15BoldStyle,
+                        builder: (context, state) {
+                          final isLoading = state is AuthLoadind;
+
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'إنشاء حساب جديد',
+                                style: TextStyle(
+                                  fontSize: 23.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: const Color(0xFF1A1A1A),
+                                  letterSpacing: -0.5,
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
+                              ),
+                              const HeightSpace(4),
+                              Text(
+                                'سجل الآن وابدأ الشحن والتوصيل الفوري',
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: const Color(0xFF6B7280),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const HeightSpace(26),
+                              RegisterForm(
+                                usernameController: username,
+                                emailController: email,
+                                passwordController: password,
+                                confirmPasswordController: confirmPassword,
+                                phoneController: _phoneController,
+                                addressController: _addressController,
+                                vehicleTypeController: _vehicleTypeController,
+                                vehiclePlateController: _vehiclePlateController,
+                                vehicleCapacityController: _vehicleCapacityController,
+                                nationalIdController: _nationalIdController,
+                                licenseNumberController: _licenseNumberController,
+                                selectedRole: _selectedRole,
+                                obscurePassword: _obscurePassword,
+                                obscureConfirmPassword: _obscureConfirmPassword,
+                                isLoading: isLoading,
+                                onRoleChanged: (role) => setState(() => _selectedRole = role),
+                                onToggleObscurePassword: () => setState(() => _obscurePassword = !_obscurePassword),
+                                onToggleObscureConfirmPassword: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                                onRegister: _onRegister,
+                                driverImage: _driverImage,
+                                idFrontImage: _idFrontImage,
+                                idBackImage: _idBackImage,
+                                licenseImage: _licenseImage,
+                                vehicleImage: _vehicleImage,
+                                onPickDriverImage: () => _pickImage((f) => _driverImage = f),
+                                onPickIdFront: () => _pickImage((f) => _idFrontImage = f),
+                                onPickIdBack: () => _pickImage((f) => _idBackImage = f),
+                                onPickLicense: () => _pickImage((f) => _licenseImage = f),
+                                onPickVehicle: () => _pickImage((f) => _vehicleImage = f),
+                              ),
+                              const HeightSpace(32),
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: RichText(
+                                  text: TextSpan(
+                                    text: 'لديك حساب بالفعل؟ ',
+                                    style: TextStyle(
+                                      fontSize: 13.5.sp,
+                                      color: const Color(0xFF555555),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: 'سجل دخول',
+                                        style: TextStyle(
+                                          fontSize: 13.5.sp,
+                                          color: AppDesign.primary,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const HeightSpace(16),
+                            ],
+                          );
+                        },
                       ),
-                      const HeightSpace(16),
-                    ],
-                  );
-                },
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

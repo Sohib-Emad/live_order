@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleDisplayName</key>
+	<string>$(APP_DISPLAY_NAME)</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Live Order</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -66,5 +66,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>يطلب التطبيق الوصول إلى موقعك الجغرافي لتحديد مكان توصيل الطلب الحالي على الخريطة.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>يطلب التطبيق الوصول إلى موقعك الجغرافي لتحديث وتتبع مسار الشحنة حتى وصولها.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>يطلب التطبيق الوصول إلى موقعك الجغرافي لتحديد وتحديث مكان توصيل الطلب المباشر.</string>
+	<key>UIStatusBarHidden</key>
+	<false/>
 </dict>
 </plist>
