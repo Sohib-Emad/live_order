@@ -1,11 +1,11 @@
-// lib/features/notifications/logic/cubit.dart
+// lib/features/user_notifications/logic/cubit.dart
 
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/notifications/data/model/notification_model.dart';
-import 'package:live_order/features/notifications/data/repository/notifications_repository.dart';
-import 'package:live_order/features/notifications/logic/state.dart';
+import 'package:live_order/core/services/supabase_service.dart';
+import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
+import 'package:live_order/features/user_notifications/data/repository/notifications_repository.dart';
+import 'package:live_order/features/user_notifications/logic/state.dart';
 
 class MarketNotificationsCubit extends Cubit<NotificationsState> {
   final NotificationsRepository _repository;
@@ -14,7 +14,7 @@ class MarketNotificationsCubit extends Cubit<NotificationsState> {
   MarketNotificationsCubit(this._repository) : super(NotificationsInitial());
 
   Future<void> loadNotifications() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     emit(NotificationsLoading());
 
     _subscription?.cancel();
@@ -29,7 +29,7 @@ class MarketNotificationsCubit extends Cubit<NotificationsState> {
   }
 
   Future<void> markAsRead(String notificationId) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     try {
       await _repository.markAsRead(uid, notificationId);
     } catch (e) {

@@ -1,4 +1,4 @@
-// lib/features/market_chat/data/model/chat_message.dart
+// lib/features/user_chat/data/model/chat_message.dart
 
 class ChatMessage {
   final String id;

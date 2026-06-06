@@ -1,21 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class OffersApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
   // Stream active offers for a driver
-  Stream<QuerySnapshot> streamDriverOffers(String driverId) {
-    return _firestore
-        .collection('orders')
-        .where('driver_id', isEqualTo: driverId)
-        .where('order_status', isEqualTo: 'Waiting Driver')
-        .snapshots();
+  Stream<List<Map<String, dynamic>>> streamDriverOffers(String driverId) {
+    return supabase
+        .from('orders')
+        .stream(primaryKey: ['id'])
+        .map((list) => list
+            .where((r) => r['driver_id'] == driverId && r['order_status'] == 'Waiting Driver')
+            .toList());
   }
 
   // Update offer status (e.g. Accepted or Cancelled/Rejected)
   Future<void> updateOfferStatus(String orderId, String status) async {
-    await _firestore.collection('orders').doc(orderId).update({
+    await supabase.from('orders').update({
       'order_status': status,
-    });
+    }).eq('id', orderId);
   }
 }

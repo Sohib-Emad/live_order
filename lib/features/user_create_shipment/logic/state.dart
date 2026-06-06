@@ -1,4 +1,4 @@
-// lib/features/create_shipment/logic/state.dart
+// lib/features/user_create_shipment/logic/state.dart
 
 abstract class CreateShipmentState {}
 

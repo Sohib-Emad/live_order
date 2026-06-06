@@ -1,25 +1,22 @@
-// lib/features/notifications/data/api/notifications_api.dart
+// lib/features/user_notifications/data/api/notifications_api.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class NotificationsApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  Stream<QuerySnapshot> streamNotifications(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .orderBy('timestamp', descending: true)
-        .snapshots();
+  Stream<List<Map<String, dynamic>>> streamNotifications(String userId) {
+    return supabase
+        .from('notifications')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.where((row) => row['user_id'] == userId).toList());
   }
 
   Future<void> markAsRead(String userId, String notificationId) async {
-    await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('notifications')
-        .doc(notificationId)
-        .update({'isRead': true});
+    await supabase
+        .from('notifications')
+        .update({'isRead': true})
+        .eq('id', notificationId)
+        .eq('user_id', userId);
   }
 }

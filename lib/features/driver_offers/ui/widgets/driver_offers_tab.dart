@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
-import 'package:live_order/features/add_order/models/order_model.dart';
-import 'package:live_order/features/driver/ui/widgets/shipment_card.dart';
+import 'package:live_order/core/models/shipment.dart';
+import 'package:live_order/features/driver_home/ui/widgets/shipment_card.dart';
+import 'package:live_order/core/constants/app_design.dart';
 
 class DriverOffersTab extends StatelessWidget {
-  final List<OrderModel> offers;
+  final List<Shipment> offers;
 
   const DriverOffersTab({
     super.key,
     required this.offers,
   });
-
-  static const _dark = Color(0xFF1A1A1A);
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +22,9 @@ class DriverOffersTab extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 0),
           child: Text(
             'طلبات الشحن والعروض الجديدة',
-            style: TextStyle(
+            style: AppDesign.heading(
               fontSize: 20.sp,
-              fontWeight: FontWeight.w800,
-              color: _dark,
+              color: AppDesign.textPrimary,
             ),
           ),
         ),
@@ -47,19 +45,18 @@ class DriverOffersTab extends StatelessWidget {
                         const HeightSpace(12),
                         Text(
                           'لا توجد عروض جديدة حالياً.',
-                          style: TextStyle(
+                          style: AppDesign.heading(
                             fontSize: 13.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
+                            color: AppDesign.textPrimary,
                           ),
                         ),
                         const HeightSpace(6),
                         Text(
                           'عند قيام العملاء بحجز مركبتك، ستظهر طلباتهم وعروضهم فوراً هنا لقبولها.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: AppDesign.body(
                             fontSize: 11.sp,
-                            color: Colors.grey[400],
+                            color: AppDesign.textSecondary,
                           ),
                         ),
                       ],

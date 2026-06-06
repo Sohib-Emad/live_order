@@ -6,7 +6,7 @@
 ## الملفات والهيكل
 
 ```
-lib/features/user/
+lib/features/user_account/
 ├── data/
 │   ├── api/
 │   │   └── user_api.dart          # API calls للتعامل مع Firebase

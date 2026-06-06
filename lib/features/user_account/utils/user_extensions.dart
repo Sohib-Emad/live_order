@@ -1,14 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:live_order/features/add_order/models/user_model.dart';
+import 'package:live_order/core/models/user_profile.dart';
 import 'package:live_order/core/routing/app_routes.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
-extension UserExtensions on UserModel {
-  /// التحقق من أن المستخدم عميل عادي (لا يوجد أدوار خاصة)
+extension UserExtensions on UserProfile {
   bool get isRegularClient => role == 'client';
 
-  /// الحصول على اختصار اسم المستخدم
   String get nameInitials {
     if (name.isEmpty) return 'ع';
     final parts = name.split(' ');
@@ -18,26 +15,22 @@ extension UserExtensions on UserModel {
     return name[0].toUpperCase();
   }
 
-  /// التحقق من أن المستخدم يملك حساب فعال
-  bool get isAccountActive => !email.isEmpty && userId.isNotEmpty;
+  bool get isAccountActive => !email.isEmpty && uid.isNotEmpty;
 
-  /// حساب مدة العضوية بالأيام
   int get membershipDays {
     return DateTime.now().difference(createdAt).inDays;
   }
 
-  /// التنقل إلى شاشة الملف الشخصي
   Future<void> navigateToProfile(BuildContext context) {
-    return context.pushNamed(
+    return Navigator.pushNamed(context, 
       AppRoutes.userProfileScreen,
-      extra: this,
+      arguments: this,
     );
   }
 
-  /// تحويل نموذج المستخدم إلى JSON
   Map<String, dynamic> toProfileJson() {
     return {
-      'user_id': userId,
+      'user_id': uid,
       'name': name,
       'email': email,
       'role': role,
@@ -47,21 +40,15 @@ extension UserExtensions on UserModel {
   }
 }
 
-extension UserAuthExtensions on FirebaseAuth {
-  /// الحصول على معرف المستخدم الحالي
-  String? getCurrentUserId() => currentUser?.uid;
+extension UserAuthExtensions on BuildContext {
+  String? getCurrentUserId() => SupabaseService.instance.client.auth.currentUser?.id;
 
-  /// التحقق من تسجيل دخول المستخدم
-  bool get isUserLoggedIn => currentUser != null;
+  String? getCurrentUserEmail() => SupabaseService.instance.client.auth.currentUser?.email;
 
-  /// الحصول على بريد المستخدم الحالي
-  String? getCurrentUserEmail() => currentUser?.email;
-
-  /// تسجيل الخروج والانتقال إلى صفحة تسجيل الدخول
-  Future<void> signOutAndNavigate(BuildContext context) async {
-    await signOut();
-    if (context.mounted) {
-      context.go(AppRoutes.loginScreen);
+  Future<void> signOutAndNavigate() async {
+    await SupabaseService.instance.client.auth.signOut();
+    if (this.mounted) {
+      Navigator.pushNamedAndRemoveUntil(this, AppRoutes.loginScreen, (route) => false);
     }
   }
 }

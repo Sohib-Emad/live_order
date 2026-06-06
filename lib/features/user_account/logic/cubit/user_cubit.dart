@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/user/data/repo/user_repo.dart';
+import 'package:live_order/features/user_account/data/repo/user_repo.dart';
 
 part 'user_state.dart';
 
@@ -9,7 +9,6 @@ class UserCubit extends Cubit<UserState> {
 
   UserCubit({required this.userRepository}) : super(const UserInitial());
 
-  // الحصول على بيانات المستخدم
   Future<void> loadUserData(String userId) async {
     emit(const UserLoading());
     final result = await userRepository.getUserData(userId);
@@ -19,7 +18,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // الحصول على الإحصائيات
   Future<void> loadUserStats(String userId) async {
     emit(const UserLoading());
     final result = await userRepository.getUserStats(userId);
@@ -29,7 +27,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // تحديث البيانات الشخصية
   Future<void> updatePersonalInfo(
     String userId,
     String name,
@@ -43,7 +40,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // تحديث الصورة الشخصية
   Future<void> updateProfileImage(String userId, String imageUrl) async {
     emit(const UserLoading());
     final result = await userRepository.updateProfileImage(userId, imageUrl);
@@ -53,7 +49,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // تحديث بيانات الاتصال
   Future<void> updateContactInfo(
     String userId,
     String phone,
@@ -67,7 +62,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // تحديث إعدادات الإشعارات
   Future<void> updateNotificationSettings(
     String userId,
     Map<String, dynamic> settings,
@@ -80,7 +74,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // الحصول على سجل النشاط
   Future<void> loadUserActivity(String userId) async {
     emit(const UserLoading());
     final result = await userRepository.getUserActivity(userId);
@@ -90,7 +83,6 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  // حذف الحساب
   Future<void> deleteAccount(String userId) async {
     emit(const UserLoading());
     final result = await userRepository.deleteAccount(userId);

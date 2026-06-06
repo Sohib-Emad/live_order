@@ -1,4 +1,4 @@
-// lib/features/rewards/data/model/reward_models.dart
+// lib/features/user_rewards/data/model/reward_models.dart
 
 class RewardTransaction {
   final String id;

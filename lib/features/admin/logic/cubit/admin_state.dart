@@ -7,8 +7,8 @@ final class AdminInitial extends AdminState {}
 final class AdminLoading extends AdminState {}
 
 final class AdminLoaded extends AdminState {
-  final List<UserModel> users;
-  final List<OrderModel> orders;
+  final List<UserProfile> users;
+  final List<Shipment> orders;
 
   AdminLoaded({required this.users, required this.orders});
 }

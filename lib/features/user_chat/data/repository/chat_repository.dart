@@ -1,8 +1,7 @@
-// lib/features/market_chat/data/repository/chat_repository.dart
+// lib/features/user_chat/data/repository/chat_repository.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:live_order/features/market_chat/data/api/chat_api.dart';
-import 'package:live_order/features/market_chat/data/model/chat_message.dart';
+import 'package:live_order/features/user_chat/data/api/chat_api.dart';
+import 'package:live_order/features/user_chat/data/model/chat_message.dart';
 
 class MarketChatRepository {
   final MarketChatApi _api;
@@ -10,18 +9,17 @@ class MarketChatRepository {
   MarketChatRepository(this._api);
 
   Stream<List<ChatMessage>> streamMessages(String chatId) {
-    return _api.streamMessages(chatId).map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    return _api.streamMessages(chatId).map((list) {
+      return list.map((data) {
         final timestampVal = data['timestamp'];
         String timestampStr;
-        if (timestampVal is Timestamp) {
-          timestampStr = timestampVal.toDate().toIso8601String();
+        if (timestampVal is DateTime) {
+          timestampStr = timestampVal.toIso8601String();
         } else {
           timestampStr = DateTime.now().toIso8601String();
         }
         return ChatMessage(
-          id: doc.id,
+          id: data['id'] ?? '',
           senderId: data['senderId'] ?? '',
           text: data['text'] ?? '',
           timestamp: DateTime.parse(timestampStr),
@@ -38,7 +36,7 @@ class MarketChatRepository {
     final messageData = {
       'senderId': message.senderId,
       'text': message.text,
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': DateTime.now().toIso8601String(),
       if (message.attachmentType != null) 'attachmentType': message.attachmentType,
       if (message.attachmentUrl != null) 'attachmentUrl': message.attachmentUrl,
       if (message.latitude != null) 'latitude': message.latitude,

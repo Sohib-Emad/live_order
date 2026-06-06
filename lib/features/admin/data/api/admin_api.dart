@@ -1,19 +1,24 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class AdminApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  Stream<QuerySnapshot> streamAllUsers() {
-    return _firestore.collection('users').snapshots();
+  Stream<List<Map<String, dynamic>>> streamAllUsers() {
+    return supabase
+        .from('users')
+        .stream(primaryKey: ['id']);
   }
 
-  Stream<QuerySnapshot> streamAllOrders() {
-    return _firestore.collection('orders').snapshots();
+  Stream<List<Map<String, dynamic>>> streamAllOrders() {
+    return supabase
+        .from('orders')
+        .stream(primaryKey: ['id']);
   }
 
   Future<void> updateDriverStatus(String userId, String status) async {
-    await _firestore.collection('users').doc(userId).update({
-      'driver_status': status,
+    await supabase.rpc('admin_update_user_status', params: {
+      'p_uid': userId,
+      'p_status': status,
     });
   }
 }

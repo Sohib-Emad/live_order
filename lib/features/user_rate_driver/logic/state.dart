@@ -1,4 +1,4 @@
-// lib/features/rate_driver/logic/state.dart
+// lib/features/user_rate_driver/logic/state.dart
 
 abstract class RateDriverState {}
 

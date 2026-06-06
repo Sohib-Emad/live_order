@@ -1,43 +1,42 @@
-// lib/features/rewards/data/api/rewards_api.dart
+// lib/features/user_rewards/data/api/rewards_api.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class RewardsApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  Stream<DocumentSnapshot> streamRewardsData(String userId) {
-    return _firestore.collection('users').doc(userId).snapshots();
+  Stream<Map<String, dynamic>> streamRewardsData(String userId) {
+    return supabase
+        .from('users')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.firstWhere((row) => row['uid'] == userId));
   }
 
-  Stream<QuerySnapshot> streamRewardTransactions(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('reward_transactions')
-        .orderBy('timestamp', descending: true)
-        .snapshots();
+  Stream<List<Map<String, dynamic>>> streamRewardTransactions(String userId) {
+    return supabase
+        .from('reward_transactions')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.where((row) => row['user_id'] == userId).toList());
   }
 
   Future<void> addRewardTransaction(String userId, Map<String, dynamic> txData, int pointsChange) async {
-    final userDoc = _firestore.collection('users').doc(userId);
-    
-    await _firestore.runTransaction((transaction) async {
-      final snapshot = await transaction.get(userDoc);
-      if (!snapshot.exists) {
-        throw Exception('User not found');
-      }
+    final userData = await supabase
+        .from('users')
+        .select()
+        .eq('uid', userId)
+        .single() as Map<String, dynamic>?;
 
-      final data = snapshot.data() as Map<String, dynamic>;
-      final int currentPoints = data['reward_points'] as int? ?? 0;
+    if (userData == null) {
+      throw Exception('User not found');
+    }
 
-      // 1. Add transaction
-      final txRef = userDoc.collection('reward_transactions').doc();
-      transaction.set(txRef, txData);
+    final int currentPoints = userData['reward_points'] as int? ?? 0;
 
-      // 2. Update user's points
-      transaction.update(userDoc, {
-        'reward_points': currentPoints + pointsChange,
-      });
-    });
+    txData['user_id'] = userId;
+    await supabase.from('reward_transactions').insert(txData);
+
+    await supabase.from('users').update({
+      'reward_points': currentPoints + pointsChange,
+    }).eq('uid', userId);
   }
 }

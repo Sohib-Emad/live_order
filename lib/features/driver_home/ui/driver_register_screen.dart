@@ -1,16 +1,15 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:live_order/core/styling/app_colors.dart';
-import 'package:live_order/core/styling/app_styles.dart';
+import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/utils/animated_snack_dialog.dart';
 import 'package:live_order/core/widgets/primay_button_widget.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
-import 'package:live_order/features/add_order/models/user_model.dart';
-import 'package:live_order/features/driver/logic/cubit/driver_cubit.dart';
+import 'package:live_order/core/models/user_profile.dart';
+import 'package:live_order/core/routing/app_routes.dart';
+import 'package:live_order/features/driver_home/logic/cubit/driver_cubit.dart';
 
 class DriverRegisterScreen extends StatefulWidget {
   const DriverRegisterScreen({super.key});
@@ -25,7 +24,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
   late TextEditingController _plateNumberController;
   late TextEditingController _nationalIdController;
   late TextEditingController _licenseNumberController;
-  UserModel? _currentUser;
+  UserProfile? _currentUser;
 
   @override
   void initState() {
@@ -36,7 +35,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
     _licenseNumberController = TextEditingController();
 
     final driverCubit = context.read<DriverCubit>();
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = SupabaseService.instance.client.auth.currentUser?.id;
     if (uid != null) {
       driverCubit.getDriverDetails(uid);
     }
@@ -80,14 +79,14 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                   color: Color(0xFF1A1A1A),
                   size: 18,
                 ),
-                onPressed: () => context.pop(),
+                onPressed: () => Navigator.pop(context),
               ),
             ),
           ),
           centerTitle: true,
           title: Text(
             'التسجيل كـ سائق شحن',
-            style: AppStyles.black18BoldStyle.copyWith(
+            style: AppDesign.heading(color: AppDesign.textPrimary, fontSize: 18).copyWith(
               fontSize: 18.sp,
               fontWeight: FontWeight.w800,
               color: const Color(0xFF1A1A1A),
@@ -105,7 +104,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                   message: 'تم تقديم طلب التسجيل بنجاح! بانتظار موافقة الإدارة تفعيل حسابك.',
                   type: AnimatedSnackBarType.success,
                 );
-                context.go('/homeScreen');
+                Navigator.pushNamedAndRemoveUntil(context, AppRoutes.homeScreen, (route) => false);
               } else if (state is DriverError) {
                 showAnimatedSnackDialog(
                   context,
@@ -154,7 +153,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                               ),
                               child: Icon(
                                 Icons.local_shipping_rounded,
-                                color: AppColors.primaryColor,
+                                color: AppDesign.primary,
                                 size: 30.sp,
                               ),
                             ),
@@ -266,7 +265,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                       const HeightSpace(32),
                       PrimayButtonWidget(
                         buttonText: 'إرسال طلب التسجيل',
-                        buttonColor: AppColors.primaryColor,
+                        buttonColor: AppDesign.primary,
                         textColor: Colors.white,
                         width: double.infinity,
                         bordersRadius: 16.r,
@@ -287,7 +286,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
 
                             final updatedUser = _currentUser!.copyWith(
                               role: 'driver',
-                              vehicleInfo: vehicleInfo,
+                              vehicleType: vehicleInfo,
                               driverStatus: 'pending',
                               isAvailable: true,
                               currentLat: 30.0444,
@@ -335,7 +334,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
           controller: controller,
           keyboardType: keyboardType,
           validator: validator,
-          cursorColor: AppColors.primaryColor,
+          cursorColor: AppDesign.primary,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
@@ -343,7 +342,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
               color: const Color(0xff8391A1),
               fontWeight: FontWeight.w400,
             ),
-            prefixIcon: Icon(icon, color: AppColors.greyColor, size: 18),
+            prefixIcon: Icon(icon, color: AppDesign.textSecondary, size: 18),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 14.w,
               vertical: 14.h,
@@ -354,7 +353,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.5),
+              borderSide: BorderSide(color: AppDesign.primary, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),

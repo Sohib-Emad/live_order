@@ -1,6 +1,6 @@
-// lib/features/rewards/logic/state.dart
+// lib/features/user_rewards/logic/state.dart
 
-import 'package:live_order/features/rewards/data/model/reward_models.dart';
+import 'package:live_order/features/user_rewards/data/model/reward_models.dart';
 
 abstract class RewardsState {}
 

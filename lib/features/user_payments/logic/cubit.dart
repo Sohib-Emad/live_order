@@ -1,11 +1,11 @@
-// lib/features/payments/logic/cubit.dart
+// lib/features/user_payments/logic/cubit.dart
 
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/payments/data/model/payment_models.dart';
-import 'package:live_order/features/payments/data/repository/payments_repository.dart';
-import 'package:live_order/features/payments/logic/state.dart';
+import 'package:live_order/core/services/supabase_service.dart';
+import 'package:live_order/features/user_payments/data/model/payment_models.dart';
+import 'package:live_order/features/user_payments/data/repository/payments_repository.dart';
+import 'package:live_order/features/user_payments/logic/state.dart';
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final PaymentsRepository _repository;
@@ -19,7 +19,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   PaymentsCubit(this._repository) : super(PaymentsInitial());
 
   Future<void> loadPaymentDetails() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     emit(PaymentsLoading());
 
     // 1. Listen to saved cards stream
@@ -58,7 +58,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     required String expiryDate,
     required String cardType,
   }) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     final card = SavedCard(
       id: '',
       cardHolder: holderName,
@@ -75,7 +75,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   Future<void> removeCard(String cardId) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     try {
       await _repository.deleteCard(uid, cardId);
     } catch (e) {
@@ -84,7 +84,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   Future<void> addMockTransaction(double amount, String title, String category) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     final tx = PaymentTransaction(
       id: '',
       amount: amount,

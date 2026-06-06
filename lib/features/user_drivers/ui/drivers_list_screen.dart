@@ -1,16 +1,15 @@
-// lib/features/drivers_list/ui/drivers_list_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:live_order/core/constants/app_design.dart';
+import 'package:live_order/core/routing/app_routes.dart';
 import 'package:live_order/core/models/user_profile.dart';
-import 'package:live_order/features/drivers_list/logic/cubit.dart';
-import 'package:live_order/features/drivers_list/logic/state.dart';
-import 'package:live_order/features/drivers_list/widget/driver_list_tile.dart';
-import 'package:live_order/shared/widgets/app_text_field.dart';
-import 'package:live_order/shared/widgets/empty_state.dart';
-import 'package:live_order/shared/widgets/loading_shimmer.dart';
+import 'package:live_order/features/user_drivers/logic/cubit.dart';
+import 'package:live_order/features/user_drivers/logic/state.dart';
+import 'package:live_order/features/user_drivers/widget/driver_list_tile.dart';
+import 'package:live_order/features/user_drivers/ui/widget/driver_filter_chip.dart';
+import 'package:live_order/features/user_drivers/ui/widget/driver_shimmer_list.dart';
+import 'package:live_order/core/widgets/app_text_field.dart';
+import 'package:live_order/core/widgets/empty_state.dart';
 
 class DriversListScreen extends StatefulWidget {
   const DriversListScreen({super.key});
@@ -55,7 +54,6 @@ class _DriversListScreenState extends State<DriversListScreen> {
       ),
       body: Column(
         children: [
-          // Search & Filter Panel
           Container(
             color: Colors.white,
             padding: const EdgeInsets.fromLTRB(
@@ -82,20 +80,35 @@ class _DriversListScreenState extends State<DriversListScreen> {
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                      _buildFilterChip('All'),
+                      DriverFilterChip(
+                        label: 'All',
+                        isSelected: _selectedFilter == 'All',
+                        onTap: () => setState(() => _selectedFilter = 'All'),
+                      ),
                       const SizedBox(width: AppDesign.space8),
-                      _buildFilterChip('Top Rated'),
+                      DriverFilterChip(
+                        label: 'Top Rated',
+                        isSelected: _selectedFilter == 'Top Rated',
+                        onTap: () => setState(() => _selectedFilter = 'Top Rated'),
+                      ),
                       const SizedBox(width: AppDesign.space8),
-                      _buildFilterChip('Heavy Trucks'),
+                      DriverFilterChip(
+                        label: 'Heavy Trucks',
+                        isSelected: _selectedFilter == 'Heavy Trucks',
+                        onTap: () => setState(() => _selectedFilter = 'Heavy Trucks'),
+                      ),
                       const SizedBox(width: AppDesign.space8),
-                      _buildFilterChip('Light Vans'),
+                      DriverFilterChip(
+                        label: 'Light Vans',
+                        isSelected: _selectedFilter == 'Light Vans',
+                        onTap: () => setState(() => _selectedFilter = 'Light Vans'),
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          // Drivers List
           Expanded(
             child: RefreshIndicator(
               onRefresh: () => context.read<DriversCubit>().loadDrivers(),
@@ -103,7 +116,7 @@ class _DriversListScreenState extends State<DriversListScreen> {
               child: BlocBuilder<DriversCubit, DriversState>(
                 builder: (context, state) {
                   if (state is DriversLoading) {
-                    return _buildShimmerList();
+                    return const DriverShimmerList();
                   } else if (state is DriversError) {
                     return SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -146,7 +159,7 @@ class _DriversListScreenState extends State<DriversListScreen> {
                         return DriverListTile(
                           driver: driver,
                           onViewTap: () {
-                            context.pushNamed('driver_details', extra: driver);
+                            Navigator.pushNamed(context, AppRoutes.driverDetails, arguments: driver);
                           },
                         );
                       },
@@ -162,48 +175,14 @@ class _DriversListScreenState extends State<DriversListScreen> {
     );
   }
 
-  Widget _buildFilterChip(String label) {
-    final isSelected = _selectedFilter == label;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedFilter = label;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? AppDesign.primary : AppDesign.surface,
-          borderRadius: BorderRadius.circular(AppDesign.radius24),
-          border: Border.all(
-            color: isSelected ? AppDesign.primary : AppDesign.border,
-            width: 1.0,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: AppDesign.body(
-              color: isSelected ? Colors.white : AppDesign.textSecondary,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-              fontSize: 13.0,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   List<UserProfile> _getFilteredDrivers(List<UserProfile> list) {
     return list.where((d) {
-      // 1. Search Query
       if (_searchQuery.isNotEmpty) {
         final matchesName = d.name.toLowerCase().contains(_searchQuery);
         final matchesVehicle = (d.vehicleType ?? '').toLowerCase().contains(_searchQuery);
         if (!matchesName && !matchesVehicle) return false;
       }
 
-      // 2. Filter Tab
       if (_selectedFilter == 'Top Rated') {
         return d.rating >= 4.9;
       } else if (_selectedFilter == 'Heavy Trucks') {
@@ -215,47 +194,5 @@ class _DriversListScreenState extends State<DriversListScreen> {
       }
       return true;
     }).toList();
-  }
-
-  Widget _buildShimmerList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppDesign.space16),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: AppDesign.space12),
-          padding: const EdgeInsets.all(AppDesign.space12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppDesign.radius12),
-            border: Border.all(color: AppDesign.border, width: 1.0),
-          ),
-          child: Row(
-            children: [
-              const LoadingShimmer(width: 52, height: 52, borderRadius: 26),
-              const SizedBox(width: AppDesign.space12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    LoadingShimmer(width: 140, height: 16),
-                    SizedBox(height: AppDesign.space8),
-                    LoadingShimmer(width: 100, height: 12),
-                    SizedBox(height: AppDesign.space12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        LoadingShimmer(width: 80, height: 14),
-                        LoadingShimmer(width: 60, height: 28, borderRadius: 8),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

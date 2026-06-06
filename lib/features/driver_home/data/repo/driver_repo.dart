@@ -1,27 +1,27 @@
 import 'package:dartz/dartz.dart';
-import 'package:live_order/features/driver/data/api/driver_api.dart';
-import 'package:live_order/features/add_order/models/user_model.dart';
-import 'package:live_order/features/add_order/models/order_model.dart';
+import 'package:live_order/features/driver_home/data/api/driver_api.dart';
+import 'package:live_order/core/models/user_profile.dart';
+import 'package:live_order/core/models/shipment.dart';
 
 class DriverRepo {
   final DriverApi _driverApi;
 
   DriverRepo(this._driverApi);
 
-  Future<Either<String, void>> registerDriver(UserModel driver) async {
+  Future<Either<String, void>> registerDriver(UserProfile driver) async {
     try {
-      await _driverApi.registerDriver(driver.toJson(), driver.userId);
+      await _driverApi.registerDriver(driver.toJson(), driver.uid);
       return const Right(null);
     } catch (e) {
       return Left('فشل تسجيل حساب السائق: $e');
     }
   }
 
-  Future<Either<String, UserModel>> getDriverDetails(String uid) async {
+  Future<Either<String, UserProfile>> getDriverDetails(String uid) async {
     try {
-      final doc = await _driverApi.getDriverDetails(uid);
-      if (doc.exists && doc.data() != null) {
-        return Right(UserModel.fromJson(doc.data() as Map<String, dynamic>, docId: doc.id));
+      final data = await _driverApi.getDriverDetails(uid);
+      if (data != null && data['uid'] != null) {
+        return Right(UserProfile.fromJson({...data, 'uid': uid}));
       }
       return const Left('لم يتم العثور على بيانات السائق');
     } catch (e) {
@@ -29,9 +29,9 @@ class DriverRepo {
     }
   }
 
-  Stream<List<OrderModel>> streamDriverOrders(String driverId) {
-    return _driverApi.streamDriverOrders(driverId).map((snapshot) => snapshot.docs
-        .map((doc) => OrderModel.fromJson(doc.data() as Map<String, dynamic>, docId: doc.id))
+  Stream<List<Shipment>> streamDriverOrders(String driverId) {
+    return _driverApi.streamDriverOrders(driverId).map((list) => list
+        .map((data) => Shipment.fromJson({...data, 'id': data['id']}))
         .toList());
   }
 

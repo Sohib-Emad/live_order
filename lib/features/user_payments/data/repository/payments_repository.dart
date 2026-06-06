@@ -1,8 +1,7 @@
-// lib/features/payments/data/repository/payments_repository.dart
+// lib/features/user_payments/data/repository/payments_repository.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:live_order/features/payments/data/api/payments_api.dart';
-import 'package:live_order/features/payments/data/model/payment_models.dart';
+import 'package:live_order/features/user_payments/data/api/payments_api.dart';
+import 'package:live_order/features/user_payments/data/model/payment_models.dart';
 
 class PaymentsRepository {
   final PaymentsApi _api;
@@ -10,27 +9,23 @@ class PaymentsRepository {
   PaymentsRepository(this._api);
 
   Stream<List<SavedCard>> streamSavedCards(String userId) {
-    return _api.streamSavedCards(userId).map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return SavedCard.fromJson(data, doc.id);
-      }).toList();
+    return _api.streamSavedCards(userId).map((list) {
+      return list.map((data) => SavedCard.fromJson(data, data['id'] as String)).toList();
     });
   }
 
   Stream<List<PaymentTransaction>> streamTransactions(String userId) {
-    return _api.streamTransactions(userId).map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    return _api.streamTransactions(userId).map((list) {
+      return list.map((data) {
         final timestampVal = data['timestamp'];
         String timestampStr;
-        if (timestampVal is Timestamp) {
-          timestampStr = timestampVal.toDate().toIso8601String();
+        if (timestampVal is DateTime) {
+          timestampStr = timestampVal.toIso8601String();
         } else {
           timestampStr = DateTime.now().toIso8601String();
         }
         final updatedData = Map<String, dynamic>.from(data)..['timestamp'] = timestampStr;
-        return PaymentTransaction.fromJson(updatedData, doc.id);
+        return PaymentTransaction.fromJson(updatedData, data['id'] as String);
       }).toList();
     });
   }
@@ -47,7 +42,7 @@ class PaymentsRepository {
     final txData = {
       'amount': tx.amount,
       'title': tx.title,
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': DateTime.now().toIso8601String(),
       'status': tx.status,
       'category': tx.category,
     };

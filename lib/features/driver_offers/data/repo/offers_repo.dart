@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
-import 'package:live_order/features/offers/data/api/offers_api.dart';
+import 'package:live_order/features/driver_offers/data/api/offers_api.dart';
 
 class OffersRepo {
   final OffersApi _offersApi;
@@ -8,7 +7,7 @@ class OffersRepo {
   OffersRepo(this._offersApi);
 
   // Stream active offers for a driver
-  Stream<QuerySnapshot> streamDriverOffers(String driverId) {
+  Stream<List<Map<String, dynamic>>> streamDriverOffers(String driverId) {
     return _offersApi.streamDriverOffers(driverId);
   }
 

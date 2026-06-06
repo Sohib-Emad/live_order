@@ -1,11 +1,11 @@
-// lib/features/rewards/logic/cubit.dart
+// lib/features/user_rewards/logic/cubit.dart
 
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/rewards/data/model/reward_models.dart';
-import 'package:live_order/features/rewards/data/repository/rewards_repository.dart';
-import 'package:live_order/features/rewards/logic/state.dart';
+import 'package:live_order/core/services/supabase_service.dart';
+import 'package:live_order/features/user_rewards/data/model/reward_models.dart';
+import 'package:live_order/features/user_rewards/data/repository/rewards_repository.dart';
+import 'package:live_order/features/user_rewards/logic/state.dart';
 
 class RewardsCubit extends Cubit<RewardsState> {
   final RewardsRepository _repository;
@@ -18,7 +18,7 @@ class RewardsCubit extends Cubit<RewardsState> {
   RewardsCubit(this._repository) : super(RewardsInitial());
 
   Future<void> loadRewardsDetails() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     emit(RewardsLoading());
 
     // 1. Listen to points stream
@@ -47,7 +47,7 @@ class RewardsCubit extends Cubit<RewardsState> {
   }
 
   Future<void> earnMockPoints(int points, String title) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     final tx = RewardTransaction(
       id: '',
       points: points,
@@ -64,7 +64,7 @@ class RewardsCubit extends Cubit<RewardsState> {
   }
 
   Future<void> redeemMockPoints(int points, String title) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? 'client_1';
+    final uid = SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1';
     if (_cachedPoints < points) {
       emit(RewardsError('Insufficient points balance'));
       _emitLoadedState();

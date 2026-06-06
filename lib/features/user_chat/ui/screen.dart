@@ -1,15 +1,17 @@
-// lib/features/market_chat/ui/screen.dart
+// lib/features/user_chat/ui/screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/models/user_profile.dart';
-import 'package:live_order/features/market_chat/data/model/chat_message.dart';
-import 'package:live_order/features/market_chat/logic/cubit.dart';
-import 'package:live_order/features/market_chat/logic/state.dart';
-import 'package:live_order/shared/widgets/avatar_widget.dart';
-import 'package:live_order/shared/widgets/empty_state.dart';
-import 'package:live_order/shared/widgets/loading_shimmer.dart';
+import 'package:live_order/features/user_chat/logic/cubit.dart';
+import 'package:live_order/features/user_chat/logic/state.dart';
+import 'package:live_order/core/widgets/avatar_widget.dart';
+import 'package:live_order/core/widgets/empty_state.dart';
+import 'package:live_order/features/user_chat/ui/widget/chat_message_bubble.dart';
+import 'package:live_order/features/user_chat/ui/widget/chat_typing_indicator.dart';
+import 'package:live_order/features/user_chat/ui/widget/chat_loading_shimmer.dart';
+import 'package:live_order/features/user_chat/ui/widget/chat_restricted_view.dart';
 
 class MarketChatScreen extends StatefulWidget {
   final UserProfile driver;
@@ -120,244 +122,138 @@ class _MarketChatScreenState extends State<MarketChatScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Message stream area
-          Expanded(
-            child: BlocConsumer<MarketChatCubit, MarketChatState>(
-              listener: (context, state) {
-                if (state is MarketChatLoaded) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-                }
-              },
-              builder: (context, state) {
-                if (state is MarketChatLoading) {
-                  return _buildLoadingShimmer();
-                } else if (state is MarketChatError) {
-                  return Center(
-                    child: EmptyState(
-                      icon: Icons.error_outline_rounded,
-                      title: 'Error loading messages',
-                      subtitle: state.message,
-                      actionLabel: 'Retry',
-                      onActionTap: () => context.read<MarketChatCubit>().loadMessages(widget.driver.uid),
-                    ),
-                  );
-                } else if (state is MarketChatLoaded) {
-                  final messages = state.messages;
-                  if (messages.isEmpty) {
-                    return Center(
-                      child: EmptyState(
-                        icon: Icons.chat_bubble_outline_rounded,
-                        title: 'Start chatting',
-                        subtitle: 'Send a message to align on shipment details.',
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space16),
-                    itemCount: messages.length + (state.isTyping ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (index == messages.length) {
-                        return _buildTypingIndicator();
+      body: BlocBuilder<MarketChatCubit, MarketChatState>(
+        builder: (context, state) {
+          if (state is MarketChatRestricted) {
+            return ChatRestrictedView(message: state.message, onBack: () => Navigator.pop(context));
+          }
+
+          return Column(
+            children: [
+              // Message stream area
+              Expanded(
+                child: BlocConsumer<MarketChatCubit, MarketChatState>(
+                  listener: (context, state) {
+                    if (state is MarketChatLoaded) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is MarketChatLoading) {
+                      return const ChatLoadingShimmer();
+                    } else if (state is MarketChatError) {
+                      return Center(
+                        child: EmptyState(
+                          icon: Icons.error_outline_rounded,
+                          title: 'حدث خطأ في تحميل الرسائل',
+                          subtitle: state.message,
+                          actionLabel: 'إعادة المحاولة',
+                          onActionTap: () => context.read<MarketChatCubit>().loadMessages(widget.driver.uid),
+                        ),
+                      );
+                    } else if (state is MarketChatLoaded) {
+                      final messages = state.messages;
+                      if (messages.isEmpty) {
+                        return Center(
+                          child: EmptyState(
+                            icon: Icons.chat_bubble_outline_rounded,
+                            title: 'ابدأ المحادثة الآن',
+                            subtitle: 'أرسل رسالة للاتفاق على تفاصيل شحن وتوصيل البضائع.',
+                          ),
+                        );
                       }
-                      final msg = messages[index];
-                      final isMe = msg.senderId != widget.driver.uid;
-                      return _buildMessageBubble(msg, isMe);
-                    },
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-
-          // Action toolbar above input
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space4),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.image_outlined, color: AppDesign.textSecondary, size: 20),
-                  onPressed: _sendMockImage,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.location_on_outlined, color: AppDesign.textSecondary, size: 20),
-                  onPressed: _sendMockLocation,
-                ),
-              ],
-            ),
-          ),
-
-          // Custom premium text input bar
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.fromLTRB(
-              AppDesign.space16,
-              AppDesign.space8,
-              AppDesign.space16,
-              AppDesign.space16,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppDesign.surface,
-                      borderRadius: BorderRadius.circular(AppDesign.radius24),
-                      border: Border.all(color: AppDesign.border, width: 1.0),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16),
-                    child: TextField(
-                      controller: _textController,
-                      cursorColor: AppDesign.primary,
-                      style: AppDesign.body(color: AppDesign.textPrimary),
-                      decoration: InputDecoration(
-                        hintText: 'Type your message...',
-                        hintStyle: AppDesign.body(color: AppDesign.textSecondary.withOpacity(0.6)),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: AppDesign.space12),
-                      ),
-                      onSubmitted: (_) => _sendMessage(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: AppDesign.space12),
-                GestureDetector(
-                  onTap: _sendMessage,
-                  child: Container(
-                    padding: const EdgeInsets.all(AppDesign.space12),
-                    decoration: const BoxDecoration(
-                      color: AppDesign.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.send_rounded, color: Colors.white, size: 18),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageBubble(ChatMessage msg, bool isMe) {
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppDesign.space12),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-        decoration: BoxDecoration(
-          color: isMe ? AppDesign.primary : Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isMe ? 16 : 4),
-            bottomRight: Radius.circular(isMe ? 4 : 16),
-          ),
-          border: isMe ? null : Border.all(color: AppDesign.border, width: 1.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.015),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (msg.attachmentType == 'image') ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(
-                  msg.attachmentUrl!,
-                  height: 140,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 140,
-                      color: AppDesign.surface,
-                      child: const Icon(Icons.image_not_supported_outlined, color: AppDesign.textSecondary),
-                    );
+                      return ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space16),
+                        itemCount: messages.length + (state.isTyping ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == messages.length) {
+                            return const ChatTypingIndicator();
+                          }
+                          final msg = messages[index];
+                          final isMe = msg.senderId != widget.driver.uid;
+                          return ChatMessageBubble(msg: msg, isMe: isMe);
+                        },
+                      );
+                    }
+                    return const SizedBox.shrink();
                   },
                 ),
               ),
-              const SizedBox(height: AppDesign.space8),
-            ] else if (msg.attachmentType == 'location') ...[
-              Row(
-                children: [
-                  const Icon(Icons.location_on_rounded, color: Colors.redAccent, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Live Location shared (${msg.latitude!.toStringAsFixed(4)}, ${msg.longitude!.toStringAsFixed(4)})',
-                      style: AppDesign.body(
-                        color: isMe ? Colors.white : AppDesign.textPrimary,
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
+
+              // Action toolbar and input bar only visible when chat is loaded successfully
+              if (state is MarketChatLoaded) ...[
+                // Action toolbar above input
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space4),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.image_outlined, color: AppDesign.textSecondary, size: 20),
+                        onPressed: _sendMockImage,
                       ),
-                    ),
+                      IconButton(
+                        icon: const Icon(Icons.location_on_outlined, color: AppDesign.textSecondary, size: 20),
+                        onPressed: _sendMockLocation,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: AppDesign.space8),
+                ),
+
+                // Custom premium text input bar
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.fromLTRB(
+                    AppDesign.space16,
+                    AppDesign.space8,
+                    AppDesign.space16,
+                    AppDesign.space16,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppDesign.surface,
+                            borderRadius: BorderRadius.circular(AppDesign.radius24),
+                            border: Border.all(color: AppDesign.border, width: 1.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16),
+                          child: TextField(
+                            controller: _textController,
+                            cursorColor: AppDesign.primary,
+                            style: AppDesign.body(color: AppDesign.textPrimary),
+                            decoration: InputDecoration(
+                              hintText: 'اكتب رسالتك هنا...',
+                              hintStyle: AppDesign.body(color: AppDesign.textSecondary.withOpacity(0.6)),
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(vertical: AppDesign.space12),
+                            ),
+                            onSubmitted: (_) => _sendMessage(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: AppDesign.space12),
+                      GestureDetector(
+                        onTap: _sendMessage,
+                        child: Container(
+                          padding: const EdgeInsets.all(AppDesign.space12),
+                          decoration: const BoxDecoration(
+                            color: AppDesign.primary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.send_rounded, color: Colors.white, size: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-            Text(
-              msg.text,
-              style: AppDesign.body(
-                color: isMe ? Colors.white : AppDesign.textPrimary,
-                fontSize: 13.5,
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
-    );
-  }
-
-  Widget _buildTypingIndicator() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: AppDesign.space12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppDesign.border, width: 1.0),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: AppDesign.space12),
-        child: Text(
-          'typing...',
-          style: AppDesign.body(color: AppDesign.textSecondary, fontSize: 12.0),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingShimmer() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppDesign.space16),
-      itemCount: 4,
-      itemBuilder: (context, index) {
-        final isMe = index % 2 == 0;
-        return Align(
-          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: AppDesign.space16),
-            child: LoadingShimmer(
-              width: 200,
-              height: 60,
-              borderRadius: 12,
-            ),
-          ),
-        );
-      },
     );
   }
 }

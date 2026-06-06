@@ -1,8 +1,7 @@
-// lib/features/notifications/data/repository/notifications_repository.dart
+// lib/features/user_notifications/data/repository/notifications_repository.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:live_order/features/notifications/data/api/notifications_api.dart';
-import 'package:live_order/features/notifications/data/model/notification_model.dart';
+import 'package:live_order/features/user_notifications/data/api/notifications_api.dart';
+import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
 
 class NotificationsRepository {
   final NotificationsApi _api;
@@ -10,18 +9,17 @@ class NotificationsRepository {
   NotificationsRepository(this._api);
 
   Stream<List<AppNotification>> streamNotifications(String userId) {
-    return _api.streamNotifications(userId).map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    return _api.streamNotifications(userId).map((list) {
+      return list.map((data) {
         final timestampVal = data['timestamp'];
         String timestampStr;
-        if (timestampVal is Timestamp) {
-          timestampStr = timestampVal.toDate().toIso8601String();
+        if (timestampVal is DateTime) {
+          timestampStr = timestampVal.toIso8601String();
         } else {
           timestampStr = DateTime.now().toIso8601String();
         }
         final updatedData = Map<String, dynamic>.from(data)..['timestamp'] = timestampStr;
-        return AppNotification.fromJson(updatedData, doc.id);
+        return AppNotification.fromJson(updatedData, data['id'] as String);
       }).toList();
     });
   }

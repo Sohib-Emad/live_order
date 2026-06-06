@@ -7,17 +7,14 @@ abstract class UserState extends Equatable {
   List<Object?> get props => [];
 }
 
-// الحالة الأولية
 class UserInitial extends UserState {
   const UserInitial();
 }
 
-// جاري التحميل
 class UserLoading extends UserState {
   const UserLoading();
 }
 
-// تم جلب البيانات بنجاح
 class UserDataLoaded extends UserState {
   final Map<String, dynamic> userData;
 
@@ -27,7 +24,6 @@ class UserDataLoaded extends UserState {
   List<Object?> get props => [userData];
 }
 
-// تم جلب الإحصائيات بنجاح
 class UserStatsLoaded extends UserState {
   final Map<String, dynamic> stats;
 
@@ -37,7 +33,6 @@ class UserStatsLoaded extends UserState {
   List<Object?> get props => [stats];
 }
 
-// تم تحديث البيانات بنجاح
 class UserDataUpdateSuccess extends UserState {
   final String message;
 
@@ -47,7 +42,6 @@ class UserDataUpdateSuccess extends UserState {
   List<Object?> get props => [message];
 }
 
-// تم تحديث الصورة الشخصية بنجاح
 class UserProfileImageUpdateSuccess extends UserState {
   final String message;
 
@@ -57,7 +51,6 @@ class UserProfileImageUpdateSuccess extends UserState {
   List<Object?> get props => [message];
 }
 
-// تم تحديث بيانات الاتصال بنجاح
 class UserContactInfoUpdateSuccess extends UserState {
   final String message;
 
@@ -67,7 +60,6 @@ class UserContactInfoUpdateSuccess extends UserState {
   List<Object?> get props => [message];
 }
 
-// تم تحديث إعدادات الإشعارات بنجاح
 class UserNotificationSettingsUpdateSuccess extends UserState {
   final String message;
 
@@ -77,7 +69,6 @@ class UserNotificationSettingsUpdateSuccess extends UserState {
   List<Object?> get props => [message];
 }
 
-// تم جلب سجل النشاط بنجاح
 class UserActivityLoaded extends UserState {
   final List<Map<String, dynamic>> activity;
 
@@ -87,7 +78,6 @@ class UserActivityLoaded extends UserState {
   List<Object?> get props => [activity];
 }
 
-// حدث خطأ
 class UserError extends UserState {
   final String message;
 
@@ -97,7 +87,6 @@ class UserError extends UserState {
   List<Object?> get props => [message];
 }
 
-// تم حذف الحساب بنجاح
 class UserAccountDeletedSuccess extends UserState {
   final String message;
 

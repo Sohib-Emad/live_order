@@ -1,22 +1,22 @@
 import 'package:dartz/dartz.dart';
 import 'package:live_order/features/admin/data/api/admin_api.dart';
-import 'package:live_order/features/add_order/models/user_model.dart';
-import 'package:live_order/features/add_order/models/order_model.dart';
+import 'package:live_order/core/models/user_profile.dart';
+import 'package:live_order/core/models/shipment.dart';
 
 class AdminRepo {
   final AdminApi _adminApi;
 
   AdminRepo(this._adminApi);
 
-  Stream<List<UserModel>> streamAllUsers() {
-    return _adminApi.streamAllUsers().map((snapshot) => snapshot.docs
-        .map((doc) => UserModel.fromJson(doc.data() as Map<String, dynamic>, docId: doc.id))
+  Stream<List<UserProfile>> streamAllUsers() {
+    return _adminApi.streamAllUsers().map((list) => list
+        .map((data) => UserProfile.fromJson({...data, 'uid': data['uid'] ?? data['id']}))
         .toList());
   }
 
-  Stream<List<OrderModel>> streamAllOrders() {
-    return _adminApi.streamAllOrders().map((snapshot) => snapshot.docs
-        .map((doc) => OrderModel.fromJson(doc.data() as Map<String, dynamic>, docId: doc.id))
+  Stream<List<Shipment>> streamAllOrders() {
+    return _adminApi.streamAllOrders().map((list) => list
+        .map((data) => Shipment.fromJson({...data, 'id': data['id']}))
         .toList());
   }
 

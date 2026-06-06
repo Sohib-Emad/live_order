@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/offers/data/repo/offers_repo.dart';
+import 'package:live_order/features/driver_offers/data/repo/offers_repo.dart';
 
 part 'offers_state.dart';
 

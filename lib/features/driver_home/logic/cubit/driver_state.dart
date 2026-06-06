@@ -9,12 +9,12 @@ final class DriverLoading extends DriverState {}
 final class DriverSuccess extends DriverState {}
 
 final class DriverDetailsLoaded extends DriverState {
-  final UserModel driver;
+  final UserProfile driver;
   DriverDetailsLoaded({required this.driver});
 }
 
 final class DriverOrdersLoaded extends DriverState {
-  final List<OrderModel> orders;
+  final List<Shipment> orders;
   DriverOrdersLoaded({required this.orders});
 }
 

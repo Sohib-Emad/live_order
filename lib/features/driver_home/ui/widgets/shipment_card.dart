@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:live_order/core/routing/app_routes.dart';
-import 'package:live_order/core/styling/app_colors.dart';
+import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
-import 'package:live_order/features/add_order/models/order_model.dart';
-import 'package:live_order/features/driver/logic/cubit/driver_cubit.dart';
+import 'package:live_order/core/models/shipment.dart';
+import 'package:live_order/features/driver_home/logic/cubit/driver_cubit.dart';
 
 class ShipmentCard extends StatelessWidget {
-  final OrderModel order;
+  final Shipment order;
   const ShipmentCard({super.key, required this.order});
 
   Color get _color {
-    switch (order.orderStatus) {
+    switch (order.status) {
       case 'Waiting Driver':
-        return AppColors.primaryColor;
+        return AppDesign.primary;
       case 'Accepted':
         return Colors.blueAccent;
       case 'In Transit':
-        return AppColors.primaryColor;
+        return AppDesign.primary;
       case 'Delivered':
         return const Color(0xFF4CAF50);
       default:
@@ -28,7 +27,7 @@ class ShipmentCard extends StatelessWidget {
   }
 
   String get _label {
-    switch (order.orderStatus) {
+    switch (order.status) {
       case 'Waiting Driver':
         return 'عرض جديد';
       case 'Accepted':
@@ -44,15 +43,15 @@ class ShipmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isOffer = order.orderStatus == 'Waiting Driver';
-    final isAccepted = order.orderStatus == 'Accepted';
-    final isTransit = order.orderStatus == 'In Transit';
+    final isOffer = order.status == 'Waiting Driver';
+    final isAccepted = order.status == 'Accepted';
+    final isTransit = order.status == 'In Transit';
 
     return GestureDetector(
       onTap: () {
-        context.pushNamed(
+        Navigator.pushNamed(context, 
           AppRoutes.orderDetailsScreen,
-          extra: {'order': order, 'isDriver': true},
+          arguments: {'order': order, 'isDriver': true},
         );
       },
       child: Container(
@@ -86,10 +85,9 @@ class ShipmentCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       order.orderName,
-                      style: TextStyle(
+                      style: AppDesign.heading(
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1A1A1A),
+                        color: AppDesign.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -105,7 +103,7 @@ class ShipmentCard extends StatelessWidget {
                     ),
                     child: Text(
                       _label,
-                      style: TextStyle(
+                      style: AppDesign.body(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.bold,
                         color: _color,
@@ -125,16 +123,16 @@ class ShipmentCard extends StatelessWidget {
                     children: [
                       _chip(
                         Icons.crop_free_rounded,
-                        order.orderSize == 'small'
+                        order.size == 'small'
                             ? 'صغير'
-                            : order.orderSize == 'medium'
+                            : order.size == 'medium'
                             ? 'متوسط'
                             : 'كبير',
                       ),
                       const WidthSpace(10),
                       _chip(
                         Icons.calendar_today_rounded,
-                        order.orderDate.split('T').first,
+                        order.preferredDate.split('T').first,
                       ),
                     ],
                   ),
@@ -145,34 +143,34 @@ class ShipmentCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(10.w),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF8E1),
+                        color: const Color(0xFFFFB300).withOpacity(0.08),
                         borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: const Color(0xFFFFB300).withOpacity(0.2), width: 1),
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.star_rounded,
-                            color: AppColors.primaryColor,
+                            color: Color(0xFFFFB300),
                             size: 15,
                           ),
                           const WidthSpace(6),
                           Text(
                             'تقييم: ${order.rating!.toStringAsFixed(1)} / 5.0',
-                            style: TextStyle(
+                            style: AppDesign.heading(
                               fontSize: 11.sp,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1A1A1A),
+                              color: AppDesign.textPrimary,
                             ),
                           ),
                           if (order.review != null && order.review!.isNotEmpty)
                             Expanded(
                               child: Text(
                                 '  — "${order.review}"',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.grey[600],
-                                ),
+                                 style: AppDesign.body(
+                                   fontSize: 10.sp,
+                                   color: AppDesign.textSecondary,
+                                   fontWeight: FontWeight.w500,
+                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -195,7 +193,7 @@ class ShipmentCard extends StatelessWidget {
                             color: const Color(0xFF4CAF50),
                             onTap: () => context
                                 .read<DriverCubit>()
-                                .acceptShipment(order.orderId),
+                                .acceptShipment(order.id),
                           ),
                         ),
                         const WidthSpace(10),
@@ -207,7 +205,7 @@ class ShipmentCard extends StatelessWidget {
                             color: Colors.redAccent,
                             onTap: () => context
                                 .read<DriverCubit>()
-                                .rejectShipment(order.orderId),
+                                .rejectShipment(order.id),
                           ),
                         ),
                       ],
@@ -217,10 +215,10 @@ class ShipmentCard extends StatelessWidget {
                       context: context,
                       label: 'بدء التوصيل',
                       icon: Icons.directions_run_rounded,
-                      color: AppColors.primaryColor,
+                      color: AppDesign.primary,
                       onTap: () => context
                           .read<DriverCubit>()
-                          .updateShipmentStatus(order.orderId, 'In Transit'),
+                          .updateShipmentStatus(order.id, 'In Transit'),
                       fullWidth: true,
                     )
                   else if (isTransit)
@@ -231,7 +229,7 @@ class ShipmentCard extends StatelessWidget {
                       color: const Color(0xFF4CAF50),
                       onTap: () => context
                           .read<DriverCubit>()
-                          .updateShipmentStatus(order.orderId, 'Delivered'),
+                          .updateShipmentStatus(order.id, 'Delivered'),
                       fullWidth: true,
                     ),
                 ],
@@ -247,11 +245,11 @@ class ShipmentCard extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 12, color: Colors.grey[400]),
+        Icon(icon, size: 12, color: AppDesign.textSecondary),
         const SizedBox(width: 4),
         Text(
           label,
-          style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
+          style: AppDesign.body(fontSize: 11.sp, color: AppDesign.textSecondary),
         ),
       ],
     );
@@ -270,7 +268,7 @@ class ShipmentCard extends StatelessWidget {
       icon: Icon(icon, size: 15),
       label: Text(
         label,
-        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+        style: AppDesign.heading(fontSize: 12.sp, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,

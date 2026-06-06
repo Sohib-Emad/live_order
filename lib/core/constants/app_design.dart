@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppDesign {
   // Colors
   static const Color primary = Color(0xFFFF6B00);
-  static const Color surface = Color(0xFFF7F8FA);
+  static const Color surface = Color(0xFFFFFFFF);
   static const Color card = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF111827);
   static const Color textSecondary = Color(0xFF6B7280);
@@ -14,6 +14,23 @@ class AppDesign {
   static const Color warning = Color(0xFFD97706);
   static const Color danger = Color(0xFFDC2626);
   static const Color border = Color(0xFFE5E7EB);
+
+  // Legacy color aliases (from old AppColors)
+  static const Color primaryColor = Color(0xFFFF6B00);
+  static const Color secondaryColor = Color(0xff8391A1);
+  static const Color blackColor = Color(0xff1F2C37);
+  static const Color greyColor = Color(0xff9CA4AB);
+  static const Color whiteColor = Colors.white;
+
+  // Font family (from old AppFonts)
+  static const String fontFamily = 'Urbanist';
+
+  // Asset paths (from old AppAssets)
+  static const String iconsPath = 'assets/icons/';
+  static const String imagePath = 'assets/images/';
+  static const String logo = 'assets/icons/logo.png';
+  static const String order = 'assets/icons/order.png';
+  static const String truck = 'assets/icons/truck.png';
 
   // Spacing
   static const double space4 = 4.0;
@@ -46,11 +63,13 @@ class AppDesign {
     double fontSize = 14.0,
     Color color = textSecondary,
     FontWeight fontWeight = FontWeight.w400,
+    double? height,
   }) {
     return GoogleFonts.dmSans(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
+      height: height,
     );
   }
 }

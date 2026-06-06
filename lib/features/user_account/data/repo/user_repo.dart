@@ -1,12 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:live_order/features/user/data/api/user_api.dart';
+import 'package:live_order/features/user_account/data/api/user_api.dart';
 
 class UserRepository {
   final UserApi userApi;
-
   UserRepository({required this.userApi});
 
-  // الحصول على بيانات المستخدم
   Future<Either<String, Map<String, dynamic>>> getUserData(String userId) async {
     try {
       final data = await userApi.getUserData(userId);
@@ -16,7 +14,6 @@ class UserRepository {
     }
   }
 
-  // تحديث البيانات الشخصية
   Future<Either<String, void>> updatePersonalInfo(
     String userId,
     String name,
@@ -34,7 +31,6 @@ class UserRepository {
     }
   }
 
-  // تحديث الصورة الشخصية
   Future<Either<String, void>> updateProfileImage(String userId, String imageUrl) async {
     try {
       await userApi.updateProfileImage(userId, imageUrl);
@@ -44,7 +40,6 @@ class UserRepository {
     }
   }
 
-  // الحصول على الإحصائيات
   Future<Either<String, Map<String, dynamic>>> getUserStats(String userId) async {
     try {
       final stats = await userApi.getUserStats(userId);
@@ -54,7 +49,6 @@ class UserRepository {
     }
   }
 
-  // تحديث بيانات الاتصال
   Future<Either<String, void>> updateContactInfo(
     String userId,
     String phone,
@@ -68,7 +62,6 @@ class UserRepository {
     }
   }
 
-  // حذف الحساب
   Future<Either<String, void>> deleteAccount(String userId) async {
     try {
       await userApi.deleteAccount(userId);
@@ -78,7 +71,6 @@ class UserRepository {
     }
   }
 
-  // الحصول على سجل النشاط
   Future<Either<String, List<Map<String, dynamic>>>> getUserActivity(String userId) async {
     try {
       final activity = await userApi.getUserActivity(userId);
@@ -88,7 +80,6 @@ class UserRepository {
     }
   }
 
-  // تحديث إعدادات الإشعارات
   Future<Either<String, void>> updateNotificationSettings(
     String userId,
     Map<String, dynamic> settings,

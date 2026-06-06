@@ -1,125 +1,123 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class UserApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  // الحصول على بيانات المستخدم
   Future<Map<String, dynamic>> getUserData(String userId) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('users').doc(userId).get();
-      if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
-      }
-      return {};
+      final data =
+          await supabase.from('users').select().eq('uid', userId).single()
+              as Map<String, dynamic>?;
+      return data ?? {};
     } catch (e) {
       throw Exception('خطأ في جلب بيانات المستخدم: $e');
     }
   }
 
-  // تحديث بيانات المستخدم
   Future<void> updateUserData(String userId, Map<String, dynamic> data) async {
     try {
-      await _firestore.collection('users').doc(userId).update(data);
+      await supabase.from('users').update(data).eq('uid', userId);
     } catch (e) {
       throw Exception('خطأ في تحديث البيانات: $e');
     }
   }
 
-  // تحديث الصورة الشخصية
   Future<void> updateProfileImage(String userId, String imageUrl) async {
     try {
-      await _firestore.collection('users').doc(userId).update({
-        'profile_image': imageUrl,
-      });
+      await supabase
+          .from('users')
+          .update({'profile_image': imageUrl})
+          .eq('uid', userId);
     } catch (e) {
       throw Exception('خطأ في تحديث الصورة الشخصية: $e');
     }
   }
 
-  // الحصول على إحصائيات المستخدم
   Future<Map<String, dynamic>> getUserStats(String userId) async {
     try {
-      // جلب عدد الطلبات المكتملة
-      QuerySnapshot completedOrders = await _firestore
-          .collection('orders')
-          .where('client_id', isEqualTo: userId)
-          .where('status', isEqualTo: 'completed')
-          .get();
+      final completedOrders = await supabase
+          .from('orders')
+          .select()
+          .eq('client_id', userId)
+          .eq('order_status', 'Delivered');
 
-      // جلب إجمالي المبلغ المنفق
-      QuerySnapshot allOrders = await _firestore
-          .collection('orders')
-          .where('client_id', isEqualTo: userId)
-          .get();
+      final allOrders = await supabase
+          .from('orders')
+          .select()
+          .eq('client_id', userId);
 
       double totalSpent = 0;
-      for (var doc in allOrders.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        totalSpent += (data['total_price'] as num?)?.toDouble() ?? 0;
+      for (var doc in allOrders) {
+        totalSpent += (doc['total_price'] as num?)?.toDouble() ?? 0;
       }
 
       return {
-        'completed_orders': completedOrders.size,
+        'completed_orders': completedOrders.length,
         'total_spent': totalSpent,
-        'active_orders': allOrders.size - completedOrders.size,
+        'active_orders': allOrders.length - completedOrders.length,
       };
     } catch (e) {
       throw Exception('خطأ في جلب الإحصائيات: $e');
     }
   }
 
-  // تحديث بيانات الاتصال
-  Future<void> updateContactInfo(String userId, String phone, String address) async {
+  Future<void> updateContactInfo(
+    String userId,
+    String phone,
+    String address,
+  ) async {
     try {
-      await _firestore.collection('users').doc(userId).update({
-        'phone': phone,
-        'address': address,
-        'updated_at': DateTime.now().toIso8601String(),
-      });
+      await supabase
+          .from('users')
+          .update({
+            'phone': phone,
+            'address': address,
+            'updated_at': DateTime.now().toIso8601String(),
+          })
+          .eq('uid', userId);
     } catch (e) {
       throw Exception('خطأ في تحديث بيانات الاتصال: $e');
     }
   }
 
-  // حذف حساب المستخدم (soft delete)
   Future<void> deleteAccount(String userId) async {
     try {
-      await _firestore.collection('users').doc(userId).update({
-        'is_deleted': true,
-        'deleted_at': DateTime.now().toIso8601String(),
-      });
+      await supabase
+          .from('users')
+          .update({
+            'is_deleted': true,
+            'deleted_at': DateTime.now().toIso8601String(),
+          })
+          .eq('uid', userId);
     } catch (e) {
       throw Exception('خطأ في حذف الحساب: $e');
     }
   }
 
-  // الحصول على تاريخ النشاط
   Future<List<Map<String, dynamic>>> getUserActivity(String userId) async {
     try {
-      QuerySnapshot snapshot = await _firestore
-          .collection('user_activity')
-          .where('user_id', isEqualTo: userId)
-          .orderBy('timestamp', descending: true)
-          .limit(50)
-          .get();
+      final data = await supabase
+          .from('user_activity')
+          .select()
+          .eq('user_id', userId)
+          .order('timestamp', ascending: false)
+          .limit(50);
 
-      return snapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
+      return data;
     } catch (e) {
       throw Exception('خطأ في جلب سجل النشاط: $e');
     }
   }
 
-  // تحديث إعدادات الإشعارات
   Future<void> updateNotificationSettings(
     String userId,
     Map<String, dynamic> settings,
   ) async {
     try {
-      await _firestore.collection('users').doc(userId).update({
-        'notification_settings': settings,
-      });
+      await supabase
+          .from('users')
+          .update({'notification_settings': settings})
+          .eq('uid', userId);
     } catch (e) {
       throw Exception('خطأ في تحديث إعدادات الإشعارات: $e');
     }

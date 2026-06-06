@@ -1,6 +1,6 @@
-// lib/features/payments/logic/state.dart
+// lib/features/user_payments/logic/state.dart
 
-import 'package:live_order/features/payments/data/model/payment_models.dart';
+import 'package:live_order/features/user_payments/data/model/payment_models.dart';
 
 abstract class PaymentsState {}
 

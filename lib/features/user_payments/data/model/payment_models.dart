@@ -1,4 +1,4 @@
-// lib/features/payments/data/model/payment_models.dart
+// lib/features/user_payments/data/model/payment_models.dart
 
 class SavedCard {
   final String id;

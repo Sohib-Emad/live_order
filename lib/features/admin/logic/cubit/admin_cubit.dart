@@ -1,40 +1,50 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:live_order/core/utils/logger.dart';
 import 'package:live_order/features/admin/data/repo/admin_repo.dart';
-import 'package:live_order/features/add_order/models/user_model.dart';
-import 'package:live_order/features/add_order/models/order_model.dart';
+import 'package:live_order/core/models/user_profile.dart';
+import 'package:live_order/core/models/shipment.dart';
 
 part 'admin_state.dart';
 
 class AdminCubit extends Cubit<AdminState> {
   final AdminRepo adminRepo;
 
-  StreamSubscription<List<UserModel>>? _usersSubscription;
-  StreamSubscription<List<OrderModel>>? _ordersSubscription;
+  StreamSubscription<List<UserProfile>>? _usersSubscription;
+  StreamSubscription<List<Shipment>>? _ordersSubscription;
 
-  List<UserModel> _allUsers = [];
-  List<OrderModel> _allOrders = [];
+  List<UserProfile> _allUsers = [];
+  List<Shipment> _allOrders = [];
 
   AdminCubit({required this.adminRepo}) : super(AdminInitial());
 
-  void initAdminDashboard() {
-    emit(AdminLoading());
-
+  void _subscribeToUsers() {
     _usersSubscription?.cancel();
     _usersSubscription = adminRepo.streamAllUsers().listen((users) {
       _allUsers = users;
       _emitLoadedState();
     }, onError: (error) {
-      emit(AdminError(message: error.toString()));
+      AppLogger.error('AdminCubit', 'Users stream error', error);
+      Future.delayed(const Duration(seconds: 3), _subscribeToUsers);
     });
+  }
 
+  void _subscribeToOrders() {
     _ordersSubscription?.cancel();
     _ordersSubscription = adminRepo.streamAllOrders().listen((orders) {
       _allOrders = orders;
       _emitLoadedState();
     }, onError: (error) {
-      emit(AdminError(message: error.toString()));
+      AppLogger.error('AdminCubit', 'Orders stream error', error);
+      Future.delayed(const Duration(seconds: 3), _subscribeToOrders);
     });
+  }
+
+  void initAdminDashboard() {
+    AppLogger.info('AdminCubit', 'initAdminDashboard called');
+    emit(AdminLoading());
+    _subscribeToUsers();
+    _subscribeToOrders();
   }
 
   void _emitLoadedState() {
@@ -42,26 +52,42 @@ class AdminCubit extends Cubit<AdminState> {
   }
 
   Future<void> approveDriver(String driverId) async {
+    AppLogger.info('AdminCubit', 'approveDriver called for $driverId');
     final result = await adminRepo.approveDriver(driverId);
     result.fold(
-      (error) => emit(AdminError(message: error)),
-      (_) => emit(AdminActionSuccess(message: 'تم تفعيل حساب السائق بنجاح وإتاحته للعملاء!')),
+      (error) {
+        AppLogger.error('AdminCubit', 'approveDriver failed', error);
+        emit(AdminError(message: error));
+      },
+      (_) {
+        _allUsers = _allUsers.map((u) {
+          if (u.uid == driverId) return u.copyWith(driverStatus: 'active');
+          return u;
+        }).toList();
+        _emitLoadedState();
+        emit(AdminActionSuccess(message: 'تم تفعيل حساب السائق بنجاح وإتاحته للعملاء!'));
+      },
     );
-    _emitLoadedState();
   }
 
-  Future<void> toggleUserBlock(UserModel user) async {
+  Future<void> toggleUserBlock(UserProfile user) async {
     final nextStatus = user.driverStatus == 'blocked' ? 'active' : 'blocked';
-    final result = await adminRepo.updateDriverBlockStatus(user.userId, nextStatus);
+    final result = await adminRepo.updateDriverBlockStatus(user.uid, nextStatus);
     result.fold(
       (error) => emit(AdminError(message: error)),
-      (_) => emit(AdminActionSuccess(
-        message: nextStatus == 'blocked'
-            ? 'تم حظر المستخدم بنجاح!'
-            : 'تم إلغاء الحظر وتفعيل الحساب!',
-      )),
+      (_) {
+        _allUsers = _allUsers.map((u) {
+          if (u.uid == user.uid) return u.copyWith(driverStatus: nextStatus);
+          return u;
+        }).toList();
+        _emitLoadedState();
+        emit(AdminActionSuccess(
+          message: nextStatus == 'blocked'
+              ? 'تم حظر المستخدم بنجاح!'
+              : 'تم إلغاء الحظر وتفعيل الحساب!',
+        ));
+      },
     );
-    _emitLoadedState();
   }
 
   @override

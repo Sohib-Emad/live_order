@@ -1,8 +1,7 @@
-// lib/features/rewards/data/repository/rewards_repository.dart
+// lib/features/user_rewards/data/repository/rewards_repository.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:live_order/features/rewards/data/api/rewards_api.dart';
-import 'package:live_order/features/rewards/data/model/reward_models.dart';
+import 'package:live_order/features/user_rewards/data/api/rewards_api.dart';
+import 'package:live_order/features/user_rewards/data/model/reward_models.dart';
 
 class RewardsRepository {
   final RewardsApi _api;
@@ -10,28 +9,23 @@ class RewardsRepository {
   RewardsRepository(this._api);
 
   Stream<int> streamPoints(String userId) {
-    return _api.streamRewardsData(userId).map((snapshot) {
-      if (snapshot.exists && snapshot.data() != null) {
-        final data = snapshot.data() as Map<String, dynamic>;
-        return data['reward_points'] as int? ?? 0;
-      }
-      return 0;
+    return _api.streamRewardsData(userId).map((data) {
+      return data['reward_points'] as int? ?? 0;
     });
   }
 
   Stream<List<RewardTransaction>> streamTransactions(String userId) {
-    return _api.streamRewardTransactions(userId).map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
+    return _api.streamRewardTransactions(userId).map((list) {
+      return list.map((data) {
         final timestampVal = data['timestamp'];
         String timestampStr;
-        if (timestampVal is Timestamp) {
-          timestampStr = timestampVal.toDate().toIso8601String();
+        if (timestampVal is DateTime) {
+          timestampStr = timestampVal.toIso8601String();
         } else {
           timestampStr = DateTime.now().toIso8601String();
         }
         final updatedData = Map<String, dynamic>.from(data)..['timestamp'] = timestampStr;
-        return RewardTransaction.fromJson(updatedData, doc.id);
+        return RewardTransaction.fromJson(updatedData, data['id'] as String);
       }).toList();
     });
   }
@@ -42,7 +36,7 @@ class RewardsRepository {
       'points': tx.points,
       'title': tx.title,
       'type': tx.type,
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': DateTime.now().toIso8601String(),
     };
     await _api.addRewardTransaction(userId, txData, pointsChange);
   }

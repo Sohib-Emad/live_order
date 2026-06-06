@@ -1,34 +1,31 @@
-// lib/features/rate_driver/data/api/rate_driver_api.dart
+// lib/features/user_rate_driver/data/api/rate_driver_api.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class RateDriverApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
   Future<void> submitReview(String driverId, Map<String, dynamic> reviewData) async {
-    final driverDoc = _firestore.collection('users').doc(driverId);
-    
-    await _firestore.runTransaction((transaction) async {
-      // 1. Fetch current driver document
-      final snapshot = await transaction.get(driverDoc);
-      if (!snapshot.exists) {
-        throw Exception('Driver not found');
-      }
+    final driverData = await supabase
+        .from('users')
+        .select()
+        .eq('uid', driverId)
+        .single() as Map<String, dynamic>?;
 
-      final data = snapshot.data() as Map<String, dynamic>;
-      final double currentRating = (data['rating'] ?? 5.0).toDouble();
-      final int currentTrips = data['trips_count'] as int? ?? 0;
+    if (driverData == null) {
+      throw Exception('Driver not found');
+    }
 
-      // 2. Add new review
-      final reviewRef = driverDoc.collection('reviews').doc();
-      transaction.set(reviewRef, reviewData);
+    final double currentRating = (driverData['rating'] ?? 5.0).toDouble();
+    final int currentTrips = driverData['trips_count'] as int? ?? 0;
 
-      // 3. Compute new rating and increment trips count
-      final double newRating = ((currentRating * currentTrips) + (reviewData['rating'] as num)) / (currentTrips + 1);
-      transaction.update(driverDoc, {
-        'rating': double.parse(newRating.toStringAsFixed(2)),
-        'trips_count': currentTrips + 1,
-      });
-    });
+    reviewData['driver_id'] = driverId;
+    await supabase.from('reviews').insert(reviewData);
+
+    final double newRating = ((currentRating * currentTrips) + (reviewData['rating'] as num)) / (currentTrips + 1);
+    await supabase.from('users').update({
+      'rating': double.parse(newRating.toStringAsFixed(2)),
+      'trips_count': currentTrips + 1,
+    }).eq('uid', driverId);
   }
 }

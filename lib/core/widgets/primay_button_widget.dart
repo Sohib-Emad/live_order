@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:live_order/core/styling/app_colors.dart';
+import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 
 class PrimayButtonWidget extends StatelessWidget {
@@ -34,7 +34,7 @@ class PrimayButtonWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPress,
       style: ElevatedButton.styleFrom(
-        backgroundColor: buttonColor ?? AppColors.primaryColor,
+        backgroundColor: buttonColor ?? AppDesign.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(bordersRadius ?? 8.r),
         ),

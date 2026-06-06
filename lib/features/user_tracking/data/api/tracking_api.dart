@@ -1,11 +1,24 @@
-// lib/features/tracking/data/api/tracking_api.dart
+// lib/features/user_tracking/data/api/tracking_api.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class TrackingApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  Stream<DocumentSnapshot> streamTrackingData(String shipmentId) {
-    return _firestore.collection('orders').doc(shipmentId).snapshots();
+  Stream<Map<String, dynamic>> streamTrackingData(String shipmentId) {
+    return supabase
+        .from('orders')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.firstWhere((row) => row['id'] == shipmentId));
+  }
+
+  Stream<Map<String, dynamic>> streamDriverLocation(String driverUid) {
+    return supabase
+        .from('users')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.firstWhere(
+          (row) => row['uid'] == driverUid,
+          orElse: () => <String, dynamic>{},
+        ));
   }
 }

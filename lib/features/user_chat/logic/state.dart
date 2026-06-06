@@ -1,6 +1,6 @@
-// lib/features/market_chat/logic/state.dart
+// lib/features/user_chat/logic/state.dart
 
-import 'package:live_order/features/market_chat/data/model/chat_message.dart';
+import 'package:live_order/features/user_chat/data/model/chat_message.dart';
 
 abstract class MarketChatState {}
 
@@ -28,4 +28,9 @@ class MarketChatLoaded extends MarketChatState {
 class MarketChatError extends MarketChatState {
   final String message;
   MarketChatError(this.message);
+}
+
+class MarketChatRestricted extends MarketChatState {
+  final String message;
+  MarketChatRestricted(this.message);
 }

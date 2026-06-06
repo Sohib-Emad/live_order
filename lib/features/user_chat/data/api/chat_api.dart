@@ -1,24 +1,19 @@
-// lib/features/market_chat/data/api/chat_api.dart
+// lib/features/user_chat/data/api/chat_api.dart
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 
 class MarketChatApi {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final supabase = SupabaseService.instance.client;
 
-  Stream<QuerySnapshot> streamMessages(String chatId) {
-    return _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('timestamp', descending: false)
-        .snapshots();
+  Stream<List<Map<String, dynamic>>> streamMessages(String chatId) {
+    return supabase
+        .from('messages')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.where((row) => row['chat_id'] == chatId).toList());
   }
 
   Future<void> sendMessage(String chatId, Map<String, dynamic> messageData) async {
-    await _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .add(messageData);
+    messageData['chat_id'] = chatId;
+    await supabase.from('messages').insert(messageData);
   }
 }

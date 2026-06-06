@@ -1,10 +1,10 @@
-// lib/features/drivers_list/widget/driver_list_tile.dart
+// lib/features/user_drivers/widget/driver_list_tile.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/models/user_profile.dart';
-import 'package:live_order/shared/widgets/avatar_widget.dart';
+import 'package:live_order/core/widgets/avatar_widget.dart';
 
 class DriverListTile extends StatelessWidget {
   final UserProfile driver;
