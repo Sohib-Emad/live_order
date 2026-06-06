@@ -11,6 +11,7 @@ class AuthCubit extends Cubit<AuthState> {
   void login(String email, String password) async {
     emit(AuthLoadind());
     final result = await authRepo.login(email: email, password: password);
+    if (isClosed) return;
     return result.fold(
       (error) {
         emit(AuthError(message: error));
@@ -22,9 +23,26 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
 
-  void register({required String username , required String email, required String password}) async {
+  void register({
+    required String username,
+    required String email,
+    required String password,
+    required String role,
+    String? vehicleInfo,
+    String? nationalId,
+    String? licenseNumber,
+  }) async {
     emit(AuthLoadind());
-    final result = await authRepo.register(email: email, password: password, username: username);
+    final result = await authRepo.register(
+      email: email,
+      password: password,
+      username: username,
+      role: role,
+      vehicleInfo: vehicleInfo,
+      nationalId: nationalId,
+      licenseNumber: licenseNumber,
+    );
+    if (isClosed) return;
     return result.fold(
       (error) {
         emit(AuthError(message: error));
