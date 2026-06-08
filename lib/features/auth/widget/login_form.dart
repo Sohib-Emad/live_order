@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/core/widgets/primay_button_widget.dart';
+import 'package:live_order/core/widgets/primary_button_widget.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/auth/widget/custom_input_field.dart';
 
@@ -83,12 +83,12 @@ class LoginForm extends StatelessWidget {
           },
         ),
         const HeightSpace(28),
-        PrimayButtonWidget(
+        PrimaryButtonWidget(
           buttonText: 'تسجيل دخول',
           buttonColor: AppDesign.primary,
           textColor: Colors.white,
           width: double.infinity,
-          bordersRadius: 16.r,
+          borderRadius: 16.r,
           isLoading: isLoading,
           onPress: onLogin,
         ),

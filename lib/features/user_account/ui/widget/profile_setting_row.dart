@@ -39,7 +39,7 @@ class ProfileSettingRow extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 13.sp,
-                color: AppDesign.textSecondary.withOpacity(0.5),
+                color: AppDesign.textSecondary.withValues(alpha: 0.5),
               ),
             ],
           ),

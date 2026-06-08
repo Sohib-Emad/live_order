@@ -34,7 +34,7 @@ class SectionEmptyCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppDesign.textSecondary.withOpacity(0.3), size: 32),
+          Icon(icon, color: AppDesign.textSecondary.withValues(alpha: 0.3), size: 32),
           const SizedBox(height: AppDesign.space12),
           Text(
             title,
@@ -61,10 +61,10 @@ class SectionEmptyCard extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppDesign.primary.withOpacity(0.08),
+                  color: AppDesign.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: AppDesign.primary.withOpacity(0.15),
+                    color: AppDesign.primary.withValues(alpha: 0.15),
                   ),
                 ),
                 child: Text(

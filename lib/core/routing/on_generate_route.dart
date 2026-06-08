@@ -139,9 +139,7 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) {
       );
     case AppRoutes.shipmentTracking:
       final shipment = settings.arguments;
-      print(
-        "DEBUG NAVIGATOR: Received shipment = $shipment, type = ${shipment?.runtimeType}",
-      );
+      
       if (shipment is Shipment) {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

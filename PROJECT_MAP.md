@@ -158,24 +158,11 @@ UI ← BlocBuilder → Cubit ← Repository ← API (Supabase Postgres)
 | `user/` | `user_account/` | العميل |
 | `home/` | `session/` | التوجيه + البث المباشر |
 
-### 🗑️ الـ driver flow القديم (بقي في مساره الجديد):
-| Feature القديم | Feature الجديد | الملفات | تستخدم في |
-|----------------|----------------|---------|-----------|
-| `add_order/` | `driver_orders/` | `order_details_screen.dart`, cubit, repo, api | Driver → تفاصيل الشحنة |
-| `chat/` | `driver_chat/` | `driver_chats_tab.dart`, `live_chat_sheet.dart`, cubit, repo, api | Driver → محادثات |
-| `notification/` | `driver_notifications/` | `driver_notifications_tab.dart`, cubit, repo, api | Driver → إشعارات |
-| `offers/` | `driver_offers/` | `driver_offers_tab.dart`, cubit, repo, api | Driver → عروض |
+### ⚠️ لا توجد مشاكل تقنية متبقية
+- `flutter analyze` يمر بــ **0 issues** ✅
 
-هذه الميزات ستعاد كتابتها لاحقاً بنفس نمط data/api/ → repository/ → cubit.
-
-### ⚠️ مشاكل تقنية معروفة:
-- `withOpacity()` قديم في Flutter 3.x (185 إشعار info) — يجب استبداله بـ `withValues(alpha:)`
-- `print()` في `add_order_screen.dart:959` — لكن الملف محذوف الآن 🗑️
-- صلاحيات الـ `mounted` بعد async في بعض الملفات (add_order/ui/driver_selection_screen.dart — لكن الملف محذوف 🗑️)
-- اسم الملف `primay_button_widget.dart` (خطأ إملائي "primay") — يستخدمه 4 ملفات قديمة
-
-### 🏗️ مطلوب في Supabase:
-- إنشاء bucket باسم `verification` (عام/public) لتخزين صور التوثيق
+### 🏗️ مطلوب في Supabase Dashboard:
+- تشغيل `supabase_schema.sql` كامل (بما في ذلك إنشاء `verification` bucket) — الـ SQL جاهز لكنه يحتاج تنفيذ يدوي في Supabase Dashboard
 
 ### 🆕 الإضافات الحديثة:
 - **M19: Map Picker (✔️)** — إنشاء `MapPickerScreen` في `user_create_shipment/` لاختيار الموقع من خريطة Google Maps مع بحث عناوين عبر Nominatim API. العكس الجغرافي (عرض العنوان عند تحريك الخريطة) عبر Nominatim API. (2026-06)
@@ -203,6 +190,21 @@ UI ← BlocBuilder → Cubit ← Repository ← API (Supabase Postgres)
 17. ~~M17: إظهار كامل بيانات السواق في لوحة المدير (✔️)~~ — كانت الحقول الاختيارية (`phone`, `address`, `vehicle_*`, `national_id`, `license_number`) لا تظهر لأن `UserProfile.fromJson` كان يقرأ القيم الافتراضية `''` كما هي بدون تحويلها إلى `null`. تم إضافة `_emptyToNull()` في `fromJson` لتحويل `''` → `null`.
 18. ~~M18: ربط صفحة تفاصيل السائق (user-facing) بقاعدة البيانات (✔️)~~ — `DriversApi.getDriversList()` و `CreateShipmentApi.fetchDrivers()` كانا يعملان mapping يدوي بــ hardcoded fallbacks وأسماء أعمدة خاطئة (`doc['imageUrl']` مكان `image_url`، `doc['vehicle_info']` مكان `vehicle_type`). تم إرجاع البيانات الخام من Supabase مباشرة والاعتماد على `UserProfile.fromJson()` للمعايرة. تم إزالة الأعمدة الميتة `password` و `vehicle_info` من `supabase_schema.sql`.
 19. ~~M22: Driver tracking – real rating, live location marker (✔️)~~ — ٣ إصلاحات في `user_tracking/`: (1) `driver_card.dart` يستخدم `driver.rating` الحقيقي و `driver.reviews.length` بدل القيم الثابتة. (2) `TrackingMapWidget` يعرض علامة زرقاء لموقع السائق المباشر. (3) `TrackingCubit` يشترك في `users` table لتحديث موقع السائق المباشر (`current_lat`/`current_long`).
+20. ~~M23: استبدال `withOpacity()` بـ `withValues(alpha:)` (✔️)~~ — 162 occurrence في 62 ملف تم استبدالها بالكامل. (2026-06)
+21. ~~M24: إزالة `print()` من on_generate_route.dart (✔️)~~ — إزالة print الـ Debug. (2026-06)
+22. ~~M25: تصحيح اسم `primay_button_widget.dart` → `primary_button_widget.dart` (✔️)~~ — إعادة تسمية الملف + الكلاس + تحديث 3 ملفات تستخدمه. (2026-06)
+23. ~~M26: Fix unused import/field warnings (✔️)~~ — إزالة `AppRoutes` import غير مستخدم و `_dark` field غير مستخدم من driver_home_screen.dart + إزالة `_parseTimestamp` الميت من supabase_service.dart. (2026-06)
+24. ~~M28: Fix all remaining flutter analyze issues (✔️)~~ — `flutter analyze` الآن 0 issues: (2026-06)
+    - `deprecated_member_use`: `activeColor` → `activeTrackColor`, `value` → `initialValue` (3 مواقع)
+    - `use_build_context_synchronously`: user_profile_screen.dart (موقعين — استخدام ScaffoldMessenger قبل async)
+    - `curly_braces_in_flow_control_structures`: driver_chat_list_item, live_chat_sheet, add_payment_dialog (8 مواقع)
+    - `unnecessary_underscores`: `__`/`___` → `_` في admin widgets (17 موقع)
+    - `depend_on_referenced_packages`: إضافة `url_launcher: ^6.3.2` إلى pubspec.yaml
+    - `use_null_aware_elements`: `if (x != null) x` → `?x` (موقعين)
+    - `prefer_is_not_empty`: `!email.isEmpty` → `email.isNotEmpty`
+    - `unnecessary_this`: `this.mounted` → `mounted`
+    - `unnecessary_brace_in_string_interps`: false positive (braces needed بسبب `_`), تم add ignore comment
+24. ~~M27: تأكيد أن driver features كلها تتبع نمط data/api/ → repository/ → cubit (✔️)~~ — driver_orders, driver_chat, driver_notifications, driver_offers كلها بالفعل تتبع النمط الجديد. (2026-06)
 
 ---
 
@@ -210,7 +212,12 @@ UI ← BlocBuilder → Cubit ← Repository ← API (Supabase Postgres)
 
 | الحزمة | الحالي | الأحدث | ملاحظات |
 |--------|--------|--------|---------|
-| supabase_flutter | 2.8.3 | 2.8.3 | بديل cloud_firestore + firebase_auth |
-| firebase_messaging | 16.2.2 | 16.3.0 | FCM فقط |
-| firebase_core | 4.9.0 | 4.10.0 | تبعية لـ FCM |
+| supabase_flutter | 2.8.3 | **2.14.0** 🔴 | ترقية متاحة (تغيير `anon key` → `publishable key`) |
+| firebase_messaging | 16.2.2 | 16.2.2 🟢 | محدث |
+| firebase_core | 4.9.0 | **4.10.0** 🟡 | فرق بسيط |
+| flutter_bloc | 9.1.1 | 9.1.1 🟢 | محدث |
+| bloc (غير مضاف مباشر) | - | **9.2.1** 🟡 | إضافة ممكنة |
+| flutter_launcher_icons | 0.13.1 | **0.14.4** 🟡 | ترقية متاحة |
+| get_it | 9.2.1 | 9.2.1 🟢 | محدث |
+| dartz | 0.10.1 | 0.10.1 🟢 | محدث |
 | flutter_launcher_icons | 0.13.1 | 0.14.4 | ترقية متاحة |

@@ -61,8 +61,11 @@ class _DriverChatListItemState extends State<DriverChatListItem> {
               lastMsgText = msgData['text'] ?? '';
               final ts = msgData['timestamp'];
               DateTime? timestamp;
-              if (ts is DateTime) timestamp = ts;
-              else if (ts is String) timestamp = DateTime.tryParse(ts);
+              if (ts is DateTime) {
+                timestamp = ts;
+              } else if (ts is String) {
+                timestamp = DateTime.tryParse(ts);
+              }
               if (timestamp != null) {
                 lastMsgTime =
                     '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
@@ -86,7 +89,7 @@ class _DriverChatListItemState extends State<DriverChatListItem> {
                 borderRadius: BorderRadius.circular(20.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -103,7 +106,7 @@ class _DriverChatListItemState extends State<DriverChatListItem> {
                   ),
                   leading: CircleAvatar(
                     radius: 24.r,
-                    backgroundColor: const Color(0xFFFFB300).withOpacity(0.12),
+                    backgroundColor: const Color(0xFFFFB300).withValues(alpha: 0.12),
                     child: Text(
                       avatarChar,
                       style: TextStyle(
@@ -138,7 +141,7 @@ class _DriverChatListItemState extends State<DriverChatListItem> {
                           vertical: 2.h,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFFB300).withOpacity(0.1),
+                          color: const Color(0xFFFFB300).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: Text(

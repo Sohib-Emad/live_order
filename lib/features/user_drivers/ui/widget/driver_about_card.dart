@@ -26,7 +26,7 @@ class DriverAboutCard extends StatelessWidget {
             top: 0,
             child: Icon(
               Icons.format_quote_rounded,
-              color: AppDesign.textSecondary.withOpacity(0.08),
+              color: AppDesign.textSecondary.withValues(alpha: 0.08),
               size: 32,
             ),
           ),

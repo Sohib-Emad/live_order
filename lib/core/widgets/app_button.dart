@@ -40,7 +40,7 @@ class AppButton extends StatelessWidget {
     }
 
     Color getTextColor() {
-      if (!isEnabled) return AppDesign.textSecondary.withOpacity(0.5);
+      if (!isEnabled) return AppDesign.textSecondary.withValues(alpha: 0.5);
       switch (variant) {
         case AppButtonVariant.primary:
           return Colors.white;

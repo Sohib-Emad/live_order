@@ -301,7 +301,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                       borderRadius: BorderRadius.circular(14),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -319,7 +319,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                         hintText: 'ابحث عن عنوان أو مكان...',
                         hintTextDirection: TextDirection.rtl,
                         hintStyle: AppDesign.body(
-                          color: AppDesign.textSecondary.withOpacity(0.6),
+                          color: AppDesign.textSecondary.withValues(alpha: 0.6),
                           fontSize: 15,
                         ),
                         prefixIcon: _isSearching
@@ -372,7 +372,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                         borderRadius: BorderRadius.circular(14),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -383,7 +383,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                         shrinkWrap: true,
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         itemCount: _searchResults.length,
-                        separatorBuilder: (_, __) => Divider(
+                        separatorBuilder: (_, _) => Divider(
                           height: 1,
                           indent: 16,
                           endIndent: 16,
@@ -437,7 +437,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AppDesign.primary.withOpacity(0.15),
+                          color: AppDesign.primary.withValues(alpha: 0.15),
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -490,7 +490,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 20,
                       offset: const Offset(0, -4),
                     ),
@@ -519,7 +519,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: AppDesign.primary.withOpacity(0.1),
+                            color: AppDesign.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -592,7 +592,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                           backgroundColor: AppDesign.primary,
                           foregroundColor: Colors.white,
                           disabledBackgroundColor: AppDesign.primary
-                              .withOpacity(0.5),
+                              .withValues(alpha: 0.5),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
@@ -659,7 +659,7 @@ class _MapPickerScreenState extends State<MapPickerScreen>
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),

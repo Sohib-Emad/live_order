@@ -20,7 +20,7 @@ class GetStartedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppDesign.primary.withOpacity(0.3),
+            color: AppDesign.primary.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 6),
           ),

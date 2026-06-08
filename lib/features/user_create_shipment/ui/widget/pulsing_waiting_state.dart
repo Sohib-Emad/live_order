@@ -36,7 +36,7 @@ class PulsingWaitingState extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(AppDesign.space24),
                 decoration: BoxDecoration(
-                  color: AppDesign.primary.withOpacity(0.08),
+                  color: AppDesign.primary.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

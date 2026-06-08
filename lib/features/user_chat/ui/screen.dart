@@ -226,7 +226,7 @@ class _MarketChatScreenState extends State<MarketChatScreen> {
                             style: AppDesign.body(color: AppDesign.textPrimary),
                             decoration: InputDecoration(
                               hintText: 'اكتب رسالتك هنا...',
-                              hintStyle: AppDesign.body(color: AppDesign.textSecondary.withOpacity(0.6)),
+                              hintStyle: AppDesign.body(color: AppDesign.textSecondary.withValues(alpha: 0.6)),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(vertical: AppDesign.space12),
                             ),

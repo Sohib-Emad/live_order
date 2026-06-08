@@ -49,12 +49,12 @@ class NotificationTile extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppDesign.radius12),
           border: Border.all(
-            color: notification.isRead ? AppDesign.border : AppDesign.primary.withOpacity(0.12),
+            color: notification.isRead ? AppDesign.border : AppDesign.primary.withValues(alpha: 0.12),
             width: 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -66,7 +66,7 @@ class NotificationTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppDesign.space8),
               decoration: BoxDecoration(
-                color: getIconColor().withOpacity(0.08),
+                color: getIconColor().withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(getIcon(), color: getIconColor(), size: 18),
@@ -106,7 +106,7 @@ class NotificationTile extends StatelessWidget {
                   Text(
                     notification.body,
                     style: AppDesign.body(
-                      color: notification.isRead ? AppDesign.textSecondary : AppDesign.textPrimary.withOpacity(0.8),
+                      color: notification.isRead ? AppDesign.textSecondary : AppDesign.textPrimary.withValues(alpha: 0.8),
                       fontSize: 12.0,
                     ),
                   ),

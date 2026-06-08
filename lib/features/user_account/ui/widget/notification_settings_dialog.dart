@@ -118,7 +118,7 @@ class _NotificationSettingsDialogState extends State<NotificationSettingsDialog>
           value: value,
           onChanged: onChanged,
           activeThumbColor: AppDesign.primary,
-          activeTrackColor: AppDesign.primary.withOpacity(0.3),
+          activeTrackColor: AppDesign.primary.withValues(alpha: 0.3),
         ),
       ],
     );

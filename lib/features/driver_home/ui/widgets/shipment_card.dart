@@ -61,7 +61,7 @@ class ShipmentCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 14,
               offset: const Offset(0, 4),
             ),
@@ -73,7 +73,7 @@ class ShipmentCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: _color.withOpacity(0.07),
+                color: _color.withValues(alpha: 0.07),
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(18.r),
                   topLeft: Radius.circular(18.r),
@@ -98,7 +98,7 @@ class ShipmentCard extends StatelessWidget {
                       vertical: 4.h,
                     ),
                     decoration: BoxDecoration(
-                      color: _color.withOpacity(0.15),
+                      color: _color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Text(
@@ -143,9 +143,9 @@ class ShipmentCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(10.w),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFB300).withOpacity(0.08),
+                        color: const Color(0xFFFFB300).withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: const Color(0xFFFFB300).withOpacity(0.2), width: 1),
+                        border: Border.all(color: const Color(0xFFFFB300).withValues(alpha: 0.2), width: 1),
                       ),
                       child: Row(
                         children: [

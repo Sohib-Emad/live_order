@@ -41,7 +41,7 @@ class ShipmentSelectionSheet extends StatelessWidget {
                     leading: Container(
                       padding: const EdgeInsets.all(AppDesign.space8),
                       decoration: BoxDecoration(
-                        color: AppDesign.primary.withOpacity(0.1),
+                        color: AppDesign.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(
                           AppDesign.radius8,
                         ),

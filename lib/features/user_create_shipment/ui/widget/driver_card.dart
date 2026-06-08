@@ -24,7 +24,7 @@ class DriverCard extends StatelessWidget {
         padding: const EdgeInsets.all(AppDesign.space16),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppDesign.primary.withOpacity(0.04)
+              ? AppDesign.primary.withValues(alpha: 0.04)
               : Colors.white,
           borderRadius: BorderRadius.circular(AppDesign.radius12),
           border: Border.all(

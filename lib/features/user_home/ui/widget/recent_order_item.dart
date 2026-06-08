@@ -93,7 +93,7 @@ class RecentOrderItem extends StatelessWidget {
                       Text(
                         shipment.preferredDate,
                         style: AppDesign.body(
-                          color: AppDesign.textSecondary.withOpacity(0.8),
+                          color: AppDesign.textSecondary.withValues(alpha: 0.8),
                           fontSize: 11.0,
                         ),
                       ),

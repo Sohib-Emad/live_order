@@ -51,7 +51,7 @@ class AuthRepo {
           'is_available': true,
           'current_lat': 30.0444,
           'current_long': 31.2357,
-          if (phone != null) 'phone': phone,
+          if (phone != null && phone.isNotEmpty) 'phone': phone,
           if (vehicleType != null && vehicleType.isNotEmpty) 'vehicle_type': vehicleType,
           if (vehiclePlate != null && vehiclePlate.isNotEmpty) 'vehicle_plate': vehiclePlate,
           if (vehicleCapacity != null && vehicleCapacity.isNotEmpty) 'vehicle_capacity': vehicleCapacity,

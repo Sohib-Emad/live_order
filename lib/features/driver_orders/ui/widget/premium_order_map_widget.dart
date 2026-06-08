@@ -93,7 +93,7 @@ class _PremiumOrderMapWidgetState extends State<PremiumOrderMapWidget> {
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 15,
             offset: const Offset(0, 4),
           ),

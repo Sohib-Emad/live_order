@@ -203,7 +203,7 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
             Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.05),
+                color: Colors.grey.withValues(alpha: 0.05),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -447,7 +447,7 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
                     width: double.infinity,
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: Colors.grey[500]!.withOpacity(0.05),
+                      color: Colors.grey[500]!.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(10.r),
                       border: Border.all(color: AppDesign.border),
                     ),
@@ -490,9 +490,9 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
                   Container(
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: Colors.amber.withOpacity(0.05),
+                      color: Colors.amber.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: Colors.amber.withOpacity(0.25)),
+                      border: Border.all(color: Colors.amber.withValues(alpha: 0.25)),
                     ),
                     child: Row(
                       children: [
@@ -527,10 +527,10 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
                   Container(
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: AppDesign.success.withOpacity(0.05),
+                      color: AppDesign.success.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppDesign.success.withOpacity(0.20),
+                        color: AppDesign.success.withValues(alpha: 0.20),
                       ),
                     ),
                     child: Column(
@@ -613,7 +613,7 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: Colors.grey[500]!.withOpacity(0.05),
+        color: Colors.grey[500]!.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: AppDesign.border),
       ),
@@ -693,7 +693,7 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: Colors.grey[500]!.withOpacity(0.05),
+        color: Colors.grey[500]!.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Column(
@@ -778,14 +778,14 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Colors.grey[500]!.withOpacity(0.05),
+        color: Colors.grey[500]!.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppDesign.border),
       ),
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: AppDesign.primary.withOpacity(0.1),
+            backgroundColor: AppDesign.primary.withValues(alpha: 0.1),
             child: Icon(icon, color: AppDesign.primary, size: 18.sp),
           ),
           SizedBox(width: 12.w),
@@ -869,9 +869,9 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
                         child: CachedNetworkImage(
                           imageUrl: url,
                           fit: BoxFit.contain,
-                          placeholder: (_, __) =>
+                          placeholder: (_, _) =>
                               const Center(child: CircularProgressIndicator()),
-                          errorWidget: (_, __, ___) => Icon(
+                          errorWidget: (_, _, _) => Icon(
                             Icons.broken_image,
                             size: 40.sp,
                             color: Colors.red,
@@ -909,9 +909,9 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
           child: CachedNetworkImage(
             imageUrl: url,
             fit: BoxFit.cover,
-            placeholder: (_, __) =>
+            placeholder: (_, _) =>
                 const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            errorWidget: (_, __, ___) =>
+            errorWidget: (_, _, _) =>
                 Icon(Icons.broken_image, size: 20.sp, color: Colors.grey),
           ),
         ),
@@ -923,9 +923,9 @@ class _AdminOrdersMonitorState extends State<AdminOrdersMonitor> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Text(
         text,
@@ -1000,7 +1000,7 @@ class _OrderCard extends StatelessWidget {
         border: Border.all(color: AppDesign.border, width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -1122,9 +1122,9 @@ class _OrderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Text(
         text,

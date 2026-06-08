@@ -15,7 +15,7 @@ extension UserExtensions on UserProfile {
     return name[0].toUpperCase();
   }
 
-  bool get isAccountActive => !email.isEmpty && uid.isNotEmpty;
+  bool get isAccountActive =>       email.isNotEmpty && uid.isNotEmpty;
 
   int get membershipDays {
     return DateTime.now().difference(createdAt).inDays;
@@ -47,7 +47,7 @@ extension UserAuthExtensions on BuildContext {
 
   Future<void> signOutAndNavigate() async {
     await SupabaseService.instance.client.auth.signOut();
-    if (this.mounted) {
+    if (mounted) {
       Navigator.pushNamedAndRemoveUntil(this, AppRoutes.loginScreen, (route) => false);
     }
   }

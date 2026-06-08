@@ -185,7 +185,7 @@ class _AdminDashboardBodyState extends State<AdminDashboardBody> {
                     // Active filters banner if filtering by a specific user
                     if (_selectedUserUidFilter != null && _currentIndex == 3)
                       Container(
-                        color: AppDesign.primary.withOpacity(0.1),
+                        color: AppDesign.primary.withValues(alpha: 0.1),
                         padding: EdgeInsets.symmetric(
                           horizontal: 16.w,
                           vertical: 8.h,
@@ -290,7 +290,7 @@ class _AdminDashboardBodyState extends State<AdminDashboardBody> {
                   border: Border.all(color: AppDesign.border, width: 1),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 15,
                       offset: const Offset(0, 4),
                     ),

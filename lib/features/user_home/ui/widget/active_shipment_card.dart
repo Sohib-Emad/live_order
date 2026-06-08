@@ -31,7 +31,7 @@ class ActiveShipmentCard extends StatelessWidget {
           border: Border.all(color: AppDesign.border, width: 1.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -136,7 +136,7 @@ class ActiveShipmentCard extends StatelessWidget {
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 12,
-                    color: AppDesign.textSecondary.withOpacity(0.5),
+                    color: AppDesign.textSecondary.withValues(alpha: 0.5),
                   ),
                 ],
               )
@@ -146,7 +146,7 @@ class ActiveShipmentCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(6.0),
                     decoration: BoxDecoration(
-                      color: AppDesign.primary.withOpacity(0.08),
+                      color: AppDesign.primary.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
                     child: const SizedBox(

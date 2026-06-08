@@ -23,7 +23,7 @@ class DriverReviewsSection extends StatelessWidget {
           children: [
             Icon(
               Icons.rate_review_outlined,
-              color: AppDesign.textSecondary.withOpacity(0.3),
+              color: AppDesign.textSecondary.withValues(alpha: 0.3),
               size: 32,
             ),
             const SizedBox(height: 8),
@@ -71,7 +71,7 @@ class DriverReviewsSection extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: avatarBg.withOpacity(0.1),
+                backgroundColor: avatarBg.withValues(alpha: 0.1),
                 child: Text(
                   initial,
                   style: TextStyle(

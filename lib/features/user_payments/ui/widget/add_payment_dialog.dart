@@ -77,10 +77,12 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
                     controller: _numberController,
                     keyboardType: TextInputType.number,
                     validator: (v) {
-                      if (v == null || v.isEmpty)
+                      if (v == null || v.isEmpty) {
                         return 'رقم البطاقة مطلوب';
-                      if (v.replaceAll(' ', '').length < 16)
+                      }
+                      if (v.replaceAll(' ', '').length < 16) {
                         return 'أدخل رقم بطاقة صحيح من 16 رقم';
+                      }
                       return null;
                     },
                   ),
@@ -93,10 +95,12 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
                           hint: 'MM/YY',
                           controller: _expiryController,
                           validator: (v) {
-                            if (v == null || v.isEmpty)
+                            if (v == null || v.isEmpty) {
                               return 'تاريخ الانتهاء مطلوب';
-                            if (!v.contains('/'))
+                            }
+                            if (!v.contains('/')) {
                               return 'الصيغة الصحيحة MM/YY';
+                            }
                             return null;
                           },
                         ),
@@ -115,7 +119,7 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
                             ),
                             const SizedBox(height: AppDesign.space8),
                             DropdownButtonFormField<String>(
-                              value: _cardType,
+                              initialValue: _cardType,
                               items: const [
                                 DropdownMenuItem(
                                   value: 'visa',

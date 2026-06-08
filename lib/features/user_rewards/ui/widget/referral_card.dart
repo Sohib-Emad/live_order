@@ -28,7 +28,7 @@ class ReferralCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppDesign.primary.withOpacity(0.08),
+                  color: AppDesign.primary.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.share_rounded, color: AppDesign.primary, size: 20),

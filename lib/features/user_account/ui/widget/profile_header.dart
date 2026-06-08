@@ -53,13 +53,13 @@ class ProfileHeader extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
               border: Border.all(
-                color: AppDesign.primary.withOpacity(0.2),
+                color: AppDesign.primary.withValues(alpha: 0.2),
                 width: 2.r,
               ),
             ),
@@ -99,10 +99,10 @@ class ProfileHeader extends StatelessWidget {
                     vertical: 4.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppDesign.success.withOpacity(0.08),
+                    color: AppDesign.success.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                      color: AppDesign.success.withOpacity(0.15),
+                      color: AppDesign.success.withValues(alpha: 0.15),
                     ),
                   ),
                   child: Row(

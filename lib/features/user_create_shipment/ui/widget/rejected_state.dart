@@ -24,7 +24,7 @@ class RejectedState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppDesign.space24),
               decoration: BoxDecoration(
-                color: AppDesign.danger.withOpacity(0.08),
+                color: AppDesign.danger.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
               child: const Icon(

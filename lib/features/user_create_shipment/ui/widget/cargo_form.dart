@@ -57,7 +57,7 @@ class CargoForm extends StatelessWidget {
           ),
           const SizedBox(height: AppDesign.space8),
           DropdownButtonFormField<String>(
-            value: selectedCargoType,
+            initialValue: selectedCargoType,
             items: cargoTypes
                 .map((type) => DropdownMenuItem(value: type, child: Text(type)))
                 .toList(),

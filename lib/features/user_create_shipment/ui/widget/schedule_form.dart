@@ -70,7 +70,7 @@ class ScheduleForm extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isSel
-                        ? AppDesign.primary.withOpacity(0.08)
+                        ? AppDesign.primary.withValues(alpha: 0.08)
                         : AppDesign.surface,
                     borderRadius: BorderRadius.circular(AppDesign.radius8),
                     border: Border.all(

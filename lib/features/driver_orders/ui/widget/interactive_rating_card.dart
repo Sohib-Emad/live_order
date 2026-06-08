@@ -50,7 +50,7 @@ class _InteractiveRatingCardState extends State<InteractiveRatingCard> {
           borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 15,
               offset: const Offset(0, 4),
             ),
@@ -144,7 +144,7 @@ class _InteractiveRatingCardState extends State<InteractiveRatingCard> {
             borderRadius: BorderRadius.circular(24.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 15,
                 offset: const Offset(0, 4),
               ),

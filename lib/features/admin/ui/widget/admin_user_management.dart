@@ -300,7 +300,7 @@ class _UserCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: isBlocked
-              ? AppDesign.danger.withOpacity(0.3)
+              ? AppDesign.danger.withValues(alpha: 0.3)
               : AppDesign.border,
           width: 1,
         ),
@@ -369,7 +369,7 @@ class _UserCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
-                    color: AppDesign.border.withOpacity(0.3),
+                    color: AppDesign.border.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Row(
@@ -694,19 +694,19 @@ class _UserCard extends StatelessWidget {
     if (user.imageUrl.isNotEmpty) {
       return CircleAvatar(
         radius: size / 2,
-        backgroundColor: AppDesign.border.withOpacity(0.3),
+        backgroundColor: AppDesign.border.withValues(alpha: 0.3),
         child: ClipOval(
           child: CachedNetworkImage(
             imageUrl: user.imageUrl,
             width: size,
             height: size,
             fit: BoxFit.cover,
-            placeholder: (_, __) => SizedBox(
+            placeholder: (_, _) => SizedBox(
               width: size / 2,
               height: size / 2,
               child: const CircularProgressIndicator(strokeWidth: 2),
             ),
-            errorWidget: (_, __, ___) => Text(
+            errorWidget: (_, _, _) => Text(
               _initials(),
               style: AppDesign.heading(
                 fontSize: size * 0.38,
@@ -719,7 +719,7 @@ class _UserCard extends StatelessWidget {
     }
     return CircleAvatar(
       radius: size / 2,
-      backgroundColor: AppDesign.primary.withOpacity(0.12),
+      backgroundColor: AppDesign.primary.withValues(alpha: 0.12),
       child: Text(
         _initials(),
         style: AppDesign.heading(
@@ -754,9 +754,9 @@ class _UserCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(4.r),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Text(
         label,
@@ -773,9 +773,9 @@ class _UserCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(4.r),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Text(
         text,
@@ -828,7 +828,7 @@ class _UserCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (trailing != null) trailing,
+          ?trailing,
         ],
       ),
     );
@@ -853,16 +853,16 @@ class _UserCard extends StatelessWidget {
                 height: 58.h,
                 width: 88.w,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => Container(
+                placeholder: (_, _) => Container(
                   height: 58.h,
-                  color: AppDesign.border.withOpacity(0.2),
+                  color: AppDesign.border.withValues(alpha: 0.2),
                   child: const Center(
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-                errorWidget: (_, __, ___) => Container(
+                errorWidget: (_, _, _) => Container(
                   height: 58.h,
-                  color: Colors.red.withOpacity(0.05),
+                  color: Colors.red.withValues(alpha: 0.05),
                   child: Icon(
                     Icons.broken_image_outlined,
                     color: Colors.red[300],
@@ -875,7 +875,7 @@ class _UserCard extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 3.h),
               decoration: BoxDecoration(
-                color: AppDesign.border.withOpacity(0.3),
+                color: AppDesign.border.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(10.r),
                 ),
@@ -942,16 +942,16 @@ class _UserCard extends StatelessWidget {
                         imageUrl: url,
                         width: double.infinity,
                         fit: BoxFit.contain,
-                        placeholder: (_, __) => Container(
+                        placeholder: (_, _) => Container(
                           height: 200.h,
-                          color: AppDesign.border.withOpacity(0.2),
+                          color: AppDesign.border.withValues(alpha: 0.2),
                           child: const Center(
                             child: CircularProgressIndicator(),
                           ),
                         ),
-                        errorWidget: (_, __, ___) => Container(
+                        errorWidget: (_, _, _) => Container(
                           height: 200.h,
-                          color: Colors.red.withOpacity(0.08),
+                          color: Colors.red.withValues(alpha: 0.08),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

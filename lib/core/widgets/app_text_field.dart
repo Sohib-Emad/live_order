@@ -60,7 +60,7 @@ class AppTextField extends StatelessWidget {
           style: AppDesign.body(color: AppDesign.textPrimary),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: AppDesign.body(color: AppDesign.textSecondary.withOpacity(0.6)),
+            hintStyle: AppDesign.body(color: AppDesign.textSecondary.withValues(alpha: 0.6)),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
             errorText: errorText,

@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:live_order/core/routing/app_routes.dart';
 import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/core/utils/animated_snack_dialog.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
@@ -35,7 +34,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   late bool _isAvailable;
 
   static const _bg = Colors.white;
-  static const _dark = AppDesign.textPrimary;
   static const _orange = AppDesign.primary;
 
   int _lastSeenNotificationCount = 0;
@@ -279,7 +277,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 border: Border.all(color: AppDesign.border, width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 15,
                     offset: const Offset(0, 4),
                   ),
@@ -502,7 +500,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 border: Border.all(color: AppDesign.border, width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -543,8 +541,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                     child: Switch.adaptive(
                       value: _isAvailable,
                       onChanged: _toggleAvailability,
-                      activeColor: AppDesign.primary,
-                      activeTrackColor: AppDesign.primary.withOpacity(0.4),
+                      activeTrackColor: AppDesign.primary,
                     ),
                   ),
                 ],
@@ -717,7 +714,7 @@ class _RatingBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFB300).withOpacity(0.12),
+        color: const Color(0xFFFFB300).withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
@@ -761,7 +758,7 @@ class _StatCard extends StatelessWidget {
           border: Border.all(color: AppDesign.border, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -773,7 +770,7 @@ class _StatCard extends StatelessWidget {
               width: 40.w,
               height: 40.w,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.12),
+                color: color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(icon, color: color, size: 20.sp),

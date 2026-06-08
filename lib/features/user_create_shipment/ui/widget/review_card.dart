@@ -76,7 +76,7 @@ class ReviewCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       color: selectedPaymentMethod == 'عند الاستلام'
-                          ? AppDesign.primary.withOpacity(0.06)
+                          ? AppDesign.primary.withValues(alpha: 0.06)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(AppDesign.radius8),
                       border: Border.all(
@@ -121,7 +121,7 @@ class ReviewCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       color: selectedPaymentMethod == 'بالبطاقة'
-                          ? AppDesign.primary.withOpacity(0.06)
+                          ? AppDesign.primary.withValues(alpha: 0.06)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(AppDesign.radius8),
                       border: Border.all(

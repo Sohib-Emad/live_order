@@ -71,7 +71,7 @@ class _ReviewFormState extends State<ReviewForm> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppDesign.space16, vertical: 10),
                 decoration: BoxDecoration(
-                  color: isSelected ? AppDesign.primary.withOpacity(0.08) : AppDesign.surface,
+                  color: isSelected ? AppDesign.primary.withValues(alpha: 0.08) : AppDesign.surface,
                   borderRadius: BorderRadius.circular(AppDesign.radius24),
                   border: Border.all(
                     color: isSelected ? AppDesign.primary : AppDesign.border,

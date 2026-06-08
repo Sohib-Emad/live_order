@@ -42,7 +42,7 @@ void showDriverReportDialog(BuildContext context, UserProfile driver) {
                 decoration: InputDecoration(
                   hintText: 'اكتب سبب الإبلاغ أو تفاصيل المشكلة هنا...',
                   hintStyle: AppDesign.body(
-                    color: AppDesign.textSecondary.withOpacity(0.5),
+                    color: AppDesign.textSecondary.withValues(alpha: 0.5),
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF9FAFB),

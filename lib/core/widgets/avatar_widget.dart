@@ -24,7 +24,7 @@ class AvatarWidget extends StatelessWidget {
         ? fallbackName.trim().split(' ').map((e) => e[0].toUpperCase()).take(2).join()
         : '?';
 
-    final bg = backgroundColor ?? AppDesign.primary.withOpacity(0.08);
+    final bg = backgroundColor ?? AppDesign.primary.withValues(alpha: 0.08);
 
     if (imageUrl != null && imageUrl!.startsWith('http')) {
       return CircleAvatar(

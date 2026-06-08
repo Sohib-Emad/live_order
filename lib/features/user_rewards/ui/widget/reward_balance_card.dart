@@ -28,7 +28,7 @@ class RewardBalanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDesign.radius12),
         boxShadow: [
           BoxShadow(
-            color: AppDesign.primary.withOpacity(0.15),
+            color: AppDesign.primary.withValues(alpha: 0.15),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -57,7 +57,7 @@ class RewardBalanceCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: AppDesign.space12, vertical: AppDesign.space4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppDesign.radius24),
                   border: Border.all(color: Colors.white24, width: 1.0),
                 ),
@@ -88,7 +88,7 @@ class RewardBalanceCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppDesign.radius8),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.15),
+              backgroundColor: Colors.white.withValues(alpha: 0.15),
               color: AppDesign.success,
               minHeight: 6,
             ),

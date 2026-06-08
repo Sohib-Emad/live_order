@@ -44,7 +44,7 @@ class CustomInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.015),
+                color: Colors.black.withValues(alpha: 0.015),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -65,7 +65,7 @@ class CustomInputField extends StatelessWidget {
               ),
               prefixIcon: Icon(
                 icon,
-                color: const Color(0xfffdad2b).withOpacity(0.7),
+                color: const Color(0xfffdad2b).withValues(alpha: 0.7),
                 size: 19.sp,
               ),
               suffixIcon: suffixIcon,
@@ -76,7 +76,7 @@ class CustomInputField extends StatelessWidget {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   width: 1.5,
                 ),
               ),
@@ -102,7 +102,7 @@ class CustomInputField extends StatelessWidget {
                 ),
               ),
               filled: true,
-              fillColor: Colors.white.withOpacity(0.65),
+              fillColor: Colors.white.withValues(alpha: 0.65),
             ),
             style: TextStyle(
               fontSize: 13.5.sp,

@@ -34,7 +34,7 @@ class PromoBanner extends StatelessWidget {
                     Text(
                       'احصل على خصم 20% على أول شحنة بضائع كبيرة هذا الأسبوع.',
                       style: AppDesign.body(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -51,7 +51,7 @@ class PromoBanner extends StatelessWidget {
               onTap: onDismiss,
               child: Icon(
                 Icons.close_rounded,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 size: 18,
               ),
             ),

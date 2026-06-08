@@ -26,7 +26,7 @@ class OrderLocationDetailRow extends StatelessWidget {
           width: 38.w,
           height: 38.w,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10.r),
           ),
           child: Icon(icon, color: color, size: 20),

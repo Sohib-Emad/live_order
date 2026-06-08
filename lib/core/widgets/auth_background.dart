@@ -23,7 +23,7 @@ class AuthBackground extends StatelessWidget {
                 height: 300.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xfffdad2b).withOpacity(0.24 * animation.value),
+                  color: const Color(0xfffdad2b).withValues(alpha: 0.24 * animation.value),
                 ),
               );
             },
@@ -40,7 +40,7 @@ class AuthBackground extends StatelessWidget {
                 height: 330.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: const Color(0xfffdad2b).withOpacity(0.14 * animation.value),
+                  color: const Color(0xfffdad2b).withValues(alpha: 0.14 * animation.value),
                 ),
               );
             },

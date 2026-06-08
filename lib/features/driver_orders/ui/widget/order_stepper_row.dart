@@ -32,7 +32,7 @@ class OrderStepperRow extends StatelessWidget {
                 boxShadow: isActive
                     ? [
                         BoxShadow(
-                          color: const Color(0xFFFFB300).withOpacity(0.4),
+                          color: const Color(0xFFFFB300).withValues(alpha: 0.4),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),

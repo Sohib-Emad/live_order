@@ -120,7 +120,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               borderRadius: BorderRadius.circular(20.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.02),
+                                  color: Colors.black.withValues(alpha: 0.02),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -172,7 +172,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                               borderRadius: BorderRadius.circular(20.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.02),
+                                  color: Colors.black.withValues(alpha: 0.02),
                                   blurRadius: 10,
                                   offset: const Offset(0, 4),
                                 ),
@@ -333,22 +333,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
               ),
               onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
                 Navigator.pop(ctx);
                 try {
                   await SupabaseService.instance.client.auth
                       .resetPasswordForEmail(emailController.text.trim());
                   if (!mounted) return;
-                  showAnimatedSnackDialog(
-                    context,
-                    message: 'تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني!',
-                    type: AnimatedSnackBarType.success,
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('تم إرسال رابط تغيير كلمة المرور إلى بريدك الإلكتروني!'),
+                      backgroundColor: AppDesign.success,
+                    ),
                   );
                 } catch (e) {
                   if (!mounted) return;
-                  showAnimatedSnackDialog(
-                    context,
-                    message: 'فشل إرسال الرابط: $e',
-                    type: AnimatedSnackBarType.error,
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text('فشل إرسال الرابط: $e'),
+                      backgroundColor: AppDesign.danger,
+                    ),
                   );
                 }
               },

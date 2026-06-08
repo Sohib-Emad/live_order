@@ -49,7 +49,7 @@ class PaymentPreferenceToggle extends StatelessWidget {
           Switch.adaptive(
             value: isCash,
             activeThumbColor: AppDesign.primary,
-            activeTrackColor: AppDesign.primary.withOpacity(0.3),
+            activeTrackColor: AppDesign.primary.withValues(alpha: 0.3),
             onChanged: onChanged,
           ),
         ],

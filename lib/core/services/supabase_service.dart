@@ -41,11 +41,4 @@ class SupabaseService {
           .map((list) => list.where((row) => row[eqField] == eqValue).toList());
     }
     return stream;
-  }
-
-  static DateTime _parseTimestamp(dynamic value) {
-    if (value is DateTime) return value;
-    if (value is String) return DateTime.parse(value);
-    return DateTime.now();
-  }
-}
+  }}

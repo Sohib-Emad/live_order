@@ -117,7 +117,7 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
                       radius: 22.r,
                       backgroundColor: const Color(
                         0xFFFFB300,
-                      ).withOpacity(0.12),
+                      ).withValues(alpha: 0.12),
                       child: Text(
                         widget.otherUserName.isNotEmpty
                             ? widget.otherUserName[0]
@@ -240,8 +240,11 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
                         final isMe = senderId == _myUid;
                         final ts = data['timestamp'];
                         DateTime? timestamp;
-                        if (ts is DateTime) timestamp = ts;
-                        else if (ts is String) timestamp = DateTime.tryParse(ts);
+                        if (ts is DateTime) {
+                          timestamp = ts;
+                        } else if (ts is String) {
+                          timestamp = DateTime.tryParse(ts);
+                        }
                         final timeStr = timestamp != null
                             ? '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}'
                             : '';
@@ -334,7 +337,7 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 10,
                       offset: const Offset(0, -4),
                     ),

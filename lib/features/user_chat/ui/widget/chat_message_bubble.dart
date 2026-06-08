@@ -30,7 +30,7 @@ class ChatMessageBubble extends StatelessWidget {
           border: isMe ? null : Border.all(color: AppDesign.border, width: 1.0),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.015),
+              color: Colors.black.withValues(alpha: 0.015),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),

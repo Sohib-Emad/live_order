@@ -142,7 +142,7 @@ class DriverNotificationsTab extends StatelessWidget {
                         border: Border.all(color: AppDesign.border, width: 1),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.02),
+                            color: Colors.black.withValues(alpha: 0.02),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -155,7 +155,7 @@ class DriverNotificationsTab extends StatelessWidget {
                             width: 38.w,
                             height: 38.w,
                             decoration: BoxDecoration(
-                              color: notif['color'].withOpacity(0.12),
+                              color: notif['color'].withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(10.r),
                             ),
                             child: Icon(

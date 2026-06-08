@@ -46,7 +46,7 @@ class OrderChatButton extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFFFB300).withOpacity(0.3),
+                color: const Color(0xFFFFB300).withValues(alpha: 0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -63,12 +63,14 @@ class OrderChatButton extends StatelessWidget {
               ),
             ),
             onPressed: () {
+              // ignore: unnecessary_brace_in_string_interps
+              final chatId = '${clientId}_${driverId}';
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
                 builder: (context) => LiveChatSheet(
-                  chatId: '${clientId}_${driverId}',
+                  chatId: chatId,
                   orderName: orderName,
                   otherUserName: otherName,
                 ),

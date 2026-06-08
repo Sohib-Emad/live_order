@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/utils/animated_snack_dialog.dart';
-import 'package:live_order/core/widgets/primay_button_widget.dart';
+import 'package:live_order/core/widgets/primary_button_widget.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/core/models/user_profile.dart';
 import 'package:live_order/core/routing/app_routes.dart';
@@ -67,7 +67,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 2),
                   ),
@@ -136,7 +136,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                           borderRadius: BorderRadius.circular(24.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.12),
+                              color: Colors.black.withValues(alpha: 0.12),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -148,7 +148,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                               width: 60.w,
                               height: 60.w,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.12),
+                                color: Colors.white.withValues(alpha: 0.12),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -171,7 +171,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                               'ابدأ باستقبال طلبات شحن البضائع وحقق أرباحاً ممتازة بتسجيل مركبتك معنا.',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
+                                color: Colors.white.withValues(alpha: 0.7),
                                 fontSize: 12.sp,
                                 height: 1.4,
                               ),
@@ -196,7 +196,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                           borderRadius: BorderRadius.circular(20.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.02),
+                              color: Colors.black.withValues(alpha: 0.02),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -263,12 +263,12 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                         ),
                       ),
                       const HeightSpace(32),
-                      PrimayButtonWidget(
+                      PrimaryButtonWidget(
                         buttonText: 'إرسال طلب التسجيل',
                         buttonColor: AppDesign.primary,
                         textColor: Colors.white,
                         width: double.infinity,
-                        bordersRadius: 16.r,
+                        borderRadius: 16.r,
                         isLoading: isLoading,
                         onPress: () {
                           if (_formKey.currentState!.validate()) {

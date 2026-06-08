@@ -3,31 +3,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 
-class PrimayButtonWidget extends StatelessWidget {
+class PrimaryButtonWidget extends StatelessWidget {
   final String? buttonText;
   final Color? buttonColor;
   final double? width;
   final double? height;
-  final double? bordersRadius;
+  final double? borderRadius;
   final Color? textColor;
   final double? fontSize;
   final Widget? icon;
   final Widget? trailingIcon;
   final void Function()? onPress;
   final bool isLoading;
-  const PrimayButtonWidget(
-      {super.key,
-      this.buttonText,
-      this.buttonColor,
-      this.width,
-      this.height,
-      this.bordersRadius,
-      this.fontSize,
-      this.textColor,
-      this.icon,
-      this.trailingIcon,
-      this.isLoading = false,
-      this.onPress});
+  const PrimaryButtonWidget({
+    super.key,
+    this.buttonText,
+    this.buttonColor,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.fontSize,
+    this.textColor,
+    this.icon,
+    this.trailingIcon,
+    this.isLoading = false,
+    this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class PrimayButtonWidget extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: buttonColor ?? AppDesign.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(bordersRadius ?? 8.r),
+          borderRadius: BorderRadius.circular(borderRadius ?? 8.r),
         ),
         fixedSize: Size(width ?? 331.w, height ?? 56.h),
       ),

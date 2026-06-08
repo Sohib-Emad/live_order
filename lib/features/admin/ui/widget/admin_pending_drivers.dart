@@ -116,7 +116,7 @@ class _AdminPendingDriversState extends State<AdminPendingDrivers> {
             Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: AppDesign.success.withOpacity(0.1),
+                color: AppDesign.success.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -389,19 +389,19 @@ class _DriverCard extends StatelessWidget {
     if (driver.imageUrl.isNotEmpty) {
       return CircleAvatar(
         radius: size / 2,
-        backgroundColor: AppDesign.border.withOpacity(0.3),
+        backgroundColor: AppDesign.border.withValues(alpha: 0.3),
         child: ClipOval(
           child: CachedNetworkImage(
             imageUrl: driver.imageUrl,
             width: size,
             height: size,
             fit: BoxFit.cover,
-            placeholder: (_, __) => SizedBox(
+            placeholder: (_, _) => SizedBox(
               width: size / 2,
               height: size / 2,
               child: const CircularProgressIndicator(strokeWidth: 2),
             ),
-            errorWidget: (_, __, ___) => Text(
+            errorWidget: (_, _, _) => Text(
               _initials(),
               style: AppDesign.heading(
                 fontSize: size * 0.38,
@@ -414,7 +414,7 @@ class _DriverCard extends StatelessWidget {
     }
     return CircleAvatar(
       radius: size / 2,
-      backgroundColor: AppDesign.primary.withOpacity(0.12),
+      backgroundColor: AppDesign.primary.withValues(alpha: 0.12),
       child: Text(
         _initials(),
         style: AppDesign.heading(
@@ -436,9 +436,9 @@ class _DriverCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6.r),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Text(
         text,
@@ -516,16 +516,17 @@ class _DriverCard extends StatelessWidget {
                 height: 60.h,
                 width: 90.w,
                 fit: BoxFit.cover,
-                placeholder: (_, __) => Container(
+                placeholder: (_, _) => Container(
                   height: 60.h,
-                  color: AppDesign.border.withOpacity(0.2),
+                  color: AppDesign.border.withValues(alpha: 0.2),
                   child: const Center(
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-                errorWidget: (_, __, ___) => Container(
+      errorWidget: (_, _, _) =>
+          Container(
                   height: 60.h,
-                  color: Colors.red.withOpacity(0.05),
+                  color: Colors.red.withValues(alpha: 0.05),
                   child: Icon(
                     Icons.broken_image_outlined,
                     color: Colors.red[300],
@@ -538,7 +539,7 @@ class _DriverCard extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: 4.h),
               decoration: BoxDecoration(
-                color: AppDesign.border.withOpacity(0.3),
+                color: AppDesign.border.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(10.r),
                 ),
@@ -605,16 +606,16 @@ class _DriverCard extends StatelessWidget {
                         imageUrl: url,
                         width: double.infinity,
                         fit: BoxFit.contain,
-                        placeholder: (_, __) => Container(
+                        placeholder: (_, _) => Container(
                           height: 200.h,
-                          color: AppDesign.border.withOpacity(0.2),
+                          color: AppDesign.border.withValues(alpha: 0.2),
                           child: const Center(
                             child: CircularProgressIndicator(),
                           ),
                         ),
-                        errorWidget: (_, __, ___) => Container(
+                errorWidget: (_, _, _) => Container(
                           height: 200.h,
-                          color: Colors.red.withOpacity(0.08),
+                          color: Colors.red.withValues(alpha: 0.08),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

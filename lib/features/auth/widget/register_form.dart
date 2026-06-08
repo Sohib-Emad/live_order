@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/core/widgets/primay_button_widget.dart';
+import 'package:live_order/core/widgets/primary_button_widget.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/auth/widget/custom_input_field.dart';
 import 'package:live_order/features/auth/widget/role_selector.dart';
@@ -269,12 +269,12 @@ class RegisterForm extends StatelessWidget {
               : const SizedBox.shrink(),
         ),
         const HeightSpace(32),
-        PrimayButtonWidget(
+        PrimaryButtonWidget(
           buttonText: 'تسجيل الحساب',
           buttonColor: AppDesign.primary,
           textColor: Colors.white,
           width: double.infinity,
-          bordersRadius: 16.r,
+          borderRadius: 16.r,
           isLoading: isLoading,
           onPress: onRegister,
         ),
