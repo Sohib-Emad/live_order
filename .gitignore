@@ -35,6 +35,8 @@ migrate_working_dir/
 
 # Env
 .env
+.env.*
+!.env.example
 
 # Symbolication related
 app.*.symbols
@@ -46,3 +48,44 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Android signing & keystores
+*.jks
+*.keystore
+key.properties
+
+# iOS certificates & profiles
+*.p12
+*.p8
+*.mobileprovision
+*.cert
+*.pem
+
+# Secrets & credentials
+secrets.*
+**/secrets/
+credentials.*
+**/credentials/
+
+# Firebase service account keys (not the android/iOS client configs)
+*-firebase-adminsdk-*.json
+service-account*.json
+
+# macOS build artifacts
+**/ios/Runner/Flutter/Flutter.podspec
+**/ios/Pods/
+
+# AI agent & tooling config (internal, not for public repo)
+.claude/
+.opencode/
+CLAUDE.md
+
+# Internal documentation
+session-summary.md
+PROJECT_MAP.md
+
+# Agent tooling generated docs
+.specify/extensions/
+.specify/scripts/
+.specify/integrations/
+.specify/workflows/
