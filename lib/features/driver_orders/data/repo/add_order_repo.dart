@@ -44,6 +44,14 @@ class AddOrderRepo {
     }
   }
 
+  Stream<List<Map<String, dynamic>>> streamOrder(String orderId) {
+    return _addOrderApi.streamOrder(orderId);
+  }
+
+  Stream<List<Map<String, dynamic>>> streamUser(String userId) {
+    return _addOrderApi.streamUser(userId);
+  }
+
   Future<Either<String, void>> rateDriverAndComplete({
     required String shipmentId,
     required String driverId,

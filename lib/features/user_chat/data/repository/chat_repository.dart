@@ -44,4 +44,16 @@ class MarketChatRepository {
     };
     await _api.sendMessage(chatId, messageData);
   }
+
+  Future<bool> hasActiveAcceptedOrder(String myUid, String driverId) async {
+    final query1 = await _api.getOrdersByUserAndDriver(myUid, driverId);
+    final query2 = await _api.getOrdersByUserAndDriver(driverId, myUid);
+    final allDocs = [...query1, ...query2];
+    return allDocs.any((doc) {
+      final status = doc['order_status'] ?? doc['status'] ?? '';
+      return status == 'Accepted' || status == 'In Transit';
+    });
+  }
+
+  String? getCurrentUserId() => _api.getCurrentUserId();
 }

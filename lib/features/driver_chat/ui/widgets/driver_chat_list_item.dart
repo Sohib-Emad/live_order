@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/models/shipment.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/features/driver_chat/ui/widgets/live_chat_sheet.dart';
-import 'package:live_order/features/driver_chat/data/repo/chat_repo.dart';
-import 'package:live_order/core/di/di.dart';
+import 'package:live_order/features/driver_chat/logic/cubit/chat_cubit.dart';
 
 class DriverChatListItem extends StatefulWidget {
   final Shipment order;
@@ -21,18 +20,16 @@ class DriverChatListItem extends StatefulWidget {
 class _DriverChatListItemState extends State<DriverChatListItem> {
   late final Stream<List<Map<String, dynamic>>> _clientStream;
   late final Stream<List<Map<String, dynamic>>> _msgStream;
+  late final ChatCubit _cubit;
 
   @override
   void initState() {
     super.initState();
+    _cubit = context.read<ChatCubit>();
     final chatId = '${widget.order.clientId}_${widget.order.driverId}';
-    final chatRepo = getIt<ChatRepo>();
 
-    _clientStream = SupabaseService.instance.client
-        .from('users')
-        .stream(primaryKey: ['uid'])
-        .map((list) => list.where((r) => r['uid'] == widget.order.clientId).toList());
-    _msgStream = chatRepo.streamMessages(chatId);
+    _clientStream = _cubit.streamClientData(widget.order.clientId);
+    _msgStream = _cubit.streamMessages(chatId);
   }
 
   @override
@@ -75,7 +72,7 @@ class _DriverChatListItemState extends State<DriverChatListItem> {
               unreadCount = docs.where((data) {
                 final senderId = data['sender_id'];
                 final isRead = data['is_read'] ?? false;
-                return senderId != SupabaseService.instance.client.auth.currentUser?.id &&
+                return senderId != _cubit.currentUserId &&
                     isRead == false;
               }).length;
             }

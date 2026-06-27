@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/services/supabase_service.dart';
-import 'package:live_order/features/user_payments/data/model/payment_models.dart';
 import 'package:live_order/features/user_payments/data/repository/payments_repository.dart';
 import 'package:live_order/features/user_payments/logic/state.dart';
 

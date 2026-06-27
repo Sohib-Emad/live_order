@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:live_order/features/user_home/data/api/client_dashboard_api.dart';
 import 'package:live_order/features/user_home/data/models/dashboard_data.dart';
 
@@ -6,15 +7,19 @@ class ClientDashboardRepository {
 
   ClientDashboardRepository(this._api);
 
-  Future<DashboardData> getDashboard() async {
-    final active = await _api.getActiveShipments();
-    final drivers = await _api.getTopDrivers();
-    final recent = await _api.getRecentOrders();
+  Future<Either<String, DashboardData>> getDashboard() async {
+    try {
+      final active = await _api.getActiveShipments();
+      final drivers = await _api.getTopDrivers();
+      final recent = await _api.getRecentOrders();
 
-    return DashboardData.fromMaps(
-      activeShipmentMaps: active,
-      topDriverMaps: drivers,
-      recentOrderMaps: recent,
-    );
+      return Right(DashboardData.fromMaps(
+        activeShipmentMaps: active,
+        topDriverMaps: drivers,
+        recentOrderMaps: recent,
+      ));
+    } catch (e) {
+      return Left('Failed to load dashboard: $e');
+    }
   }
 }

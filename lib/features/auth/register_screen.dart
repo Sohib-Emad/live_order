@@ -9,6 +9,7 @@ import 'package:live_order/core/utils/animated_snack_dialog.dart';
 import 'package:live_order/core/widgets/auth_background.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:live_order/features/auth/logic/state.dart';
 import 'package:live_order/features/auth/widget/register_form.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -132,7 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                       key: formKey,
                       child: BlocConsumer<AuthCubit, AuthState>(
                         listenWhen: (previous, current) =>
-                            current is AuthError || current is AuthRegisterSuccess || current is AuthLoadind,
+                            current is AuthError || current is AuthRegisterSuccess || current is AuthLoading,
                         listener: (context, state) {
                           if (state is AuthError) {
                             showAnimatedSnackDialog(
@@ -150,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                           }
                         },
                         builder: (context, state) {
-                          final isLoading = state is AuthLoadind;
+                          final isLoading = state is AuthLoading;
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,

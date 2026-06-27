@@ -1,19 +1,37 @@
 // lib/features/user_drivers/logic/state.dart
 
+import 'package:equatable/equatable.dart';
 import 'package:live_order/core/models/user_profile.dart';
 
-abstract class DriversState {}
+abstract class DriversState extends Equatable {
+  const DriversState();
 
-class DriversInitial extends DriversState {}
+  @override
+  List<Object?> get props => [];
+}
 
-class DriversLoading extends DriversState {}
+class DriversInitial extends DriversState {
+  const DriversInitial();
+}
+
+class DriversLoading extends DriversState {
+  const DriversLoading();
+}
 
 class DriversLoaded extends DriversState {
   final List<UserProfile> drivers;
-  DriversLoaded(this.drivers);
+
+  const DriversLoaded(this.drivers);
+
+  @override
+  List<Object?> get props => [drivers];
 }
 
 class DriversError extends DriversState {
   final String message;
-  DriversError(this.message);
+
+  const DriversError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

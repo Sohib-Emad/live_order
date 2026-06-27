@@ -6,7 +6,10 @@ final class DriverInitial extends DriverState {}
 
 final class DriverLoading extends DriverState {}
 
-final class DriverSuccess extends DriverState {}
+final class DriverSuccess extends DriverState {
+  final String message;
+  DriverSuccess({this.message = 'تم تحديث حالة الشحنة بنجاح!'});
+}
 
 final class DriverDetailsLoaded extends DriverState {
   final UserProfile driver;

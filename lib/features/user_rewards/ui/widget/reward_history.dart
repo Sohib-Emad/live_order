@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/features/user_rewards/data/model/reward_models.dart';
+import 'package:live_order/features/user_rewards/logic/state.dart';
 
 class RewardHistory extends StatelessWidget {
   final List<RewardTransaction> transactions;

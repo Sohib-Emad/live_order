@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/routing/app_routes.dart';
 import 'package:live_order/features/session/logic/cubit/home_cubit.dart';
+import 'package:live_order/features/session/logic/state.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});

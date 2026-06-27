@@ -15,6 +15,14 @@ class HomeRepo {
     return _homeApi.streamClientOrders(userId);
   }
 
+  Stream<List<Map<String, dynamic>>> streamChatMessages(String chatId) {
+    return _homeApi.streamChatMessages(chatId);
+  }
+
+  String? getCurrentUid() {
+    return _homeApi.getCurrentUid();
+  }
+
   // Update user saved address (Home/Work) in Supabase
   Future<void> updateUserAddress(String userId, String key, String newAddress) async {
     await _homeApi.updateUserAddress(userId, key, newAddress);

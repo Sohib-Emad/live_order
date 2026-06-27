@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
+import 'package:live_order/features/user_notifications/logic/state.dart';
 
 class NotificationTile extends StatelessWidget {
   final AppNotification notification;

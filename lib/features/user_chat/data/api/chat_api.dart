@@ -16,4 +16,16 @@ class MarketChatApi {
     messageData['chat_id'] = chatId;
     await supabase.from('messages').insert(messageData);
   }
+
+  Future<List<Map<String, dynamic>>> getOrdersByUserAndDriver(String userId, String driverId) async {
+    return await supabase
+        .from('orders')
+        .select()
+        .eq('order_user_id', userId)
+        .eq('driver_id', driverId);
+  }
+
+  String? getCurrentUserId() {
+    return supabase.auth.currentUser?.id;
+  }
 }

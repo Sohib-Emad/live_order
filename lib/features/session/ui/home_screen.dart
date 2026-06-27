@@ -1,7 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/routing/app_routes.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -9,6 +8,7 @@ import 'package:live_order/core/di/di.dart';
 import 'package:live_order/core/models/user_profile.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/session/logic/cubit/home_cubit.dart';
+import 'package:live_order/features/session/logic/state.dart';
 import 'package:live_order/features/session/ui/widgets/driver_blocked_screen.dart';
 import 'package:live_order/features/session/ui/widgets/driver_pending_screen.dart';
 import 'package:live_order/features/admin/ui/admin_dashboard_screen.dart';
@@ -41,21 +41,11 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
   @override
   void initState() {
     super.initState();
-    final uid = SupabaseService.instance.client.auth.currentUser?.id;
-    if (uid != null) {
-      context.read<HomeCubit>().initHome(uid);
-    }
+    context.read<HomeCubit>().initHome();
   }
 
   @override
   Widget build(BuildContext context) {
-    final uid = SupabaseService.instance.client.auth.currentUser?.id;
-    if (uid == null) {
-      return const Scaffold(
-        body: Center(child: Text('يرجى تسجيل الدخول أولاً')),
-      );
-    }
-
     return BlocBuilder<HomeCubit, HomeState>(
       buildWhen: (previous, current) =>
           current is HomeLoaded ||
@@ -136,7 +126,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                         elevation: 0,
                       ),
                       onPressed: () async {
-                        await SupabaseService.instance.client.auth.signOut();
+                        await context.read<HomeCubit>().signOut();
                         if (context.mounted) {
                           Navigator.pushNamedAndRemoveUntil(
                             context,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/models/user_profile.dart';
-import 'package:live_order/core/services/supabase_service.dart';
+import 'package:live_order/features/user_drivers/logic/cubit.dart';
 
 void showDriverReportDialog(BuildContext context, UserProfile driver) {
+  final cubit = context.read<DriversCubit>();
   final TextEditingController reasonController = TextEditingController();
   showDialog(
     context: context,
@@ -83,14 +85,7 @@ void showDriverReportDialog(BuildContext context, UserProfile driver) {
                 }
                 Navigator.pop(context);
 
-                SupabaseService.instance.client.from('reports').insert({
-                  'driver_id': driver.uid,
-                  'driver_name': driver.name,
-                  'reporter_id':
-                      SupabaseService.instance.client.auth.currentUser?.id ?? 'client_1',
-                  'reason': text,
-                  'timestamp': DateTime.now().toIso8601String(),
-                });
+                cubit.reportDriver(driver.uid, driver.name, text);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

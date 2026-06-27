@@ -1,7 +1,8 @@
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:lottie/lottie.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:live_order/features/session/logic/cubit/home_cubit.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/routing/app_routes.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
@@ -83,7 +84,7 @@ class _DriverBlockedScreenState extends State<DriverBlockedScreen>
                   ),
                 ),
                 onPressed: () async {
-                  await SupabaseService.instance.client.auth.signOut();
+                  await context.read<HomeCubit>().signOut();
                   if (context.mounted) {
                     Navigator.pushNamedAndRemoveUntil(
                       context,

@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/services/supabase_service.dart';
-import 'package:live_order/features/user_rewards/data/model/reward_models.dart';
 import 'package:live_order/features/user_rewards/data/repository/rewards_repository.dart';
 import 'package:live_order/features/user_rewards/logic/state.dart';
 

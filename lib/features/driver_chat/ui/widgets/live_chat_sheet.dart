@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
-import 'package:live_order/features/driver_chat/data/repo/chat_repo.dart';
-import 'package:live_order/core/di/di.dart';
+import 'package:live_order/features/driver_chat/logic/cubit/chat_cubit.dart';
+import 'package:live_order/core/utils/logger.dart';
 
 class LiveChatSheet extends StatefulWidget {
   final String chatId;
@@ -24,7 +24,15 @@ class LiveChatSheet extends StatefulWidget {
 class _LiveChatSheetState extends State<LiveChatSheet> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  final String? _myUid = SupabaseService.instance.client.auth.currentUser?.id;
+  late final ChatCubit _chatCubit;
+  String? _myUid;
+
+  @override
+  void initState() {
+    super.initState();
+    _chatCubit = context.read<ChatCubit>();
+    _myUid = _chatCubit.currentUserId;
+  }
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -46,11 +54,10 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
 
     if (unreadDocs.isEmpty) return;
 
-    final chatRepo = getIt<ChatRepo>();
     for (var doc in unreadDocs) {
       final msgId = doc['id'] as String?;
       if (msgId != null) {
-        chatRepo.markMessageAsRead(widget.chatId, msgId);
+        _chatCubit.markAsRead(widget.chatId, msgId);
       }
     }
   }
@@ -62,29 +69,25 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
     _textController.clear();
 
     try {
-      final chatRepo = getIt<ChatRepo>();
-      final nameResult = await chatRepo.getSenderName(_myUid);
+      final nameResult = await _chatCubit.getSenderName(_myUid!);
       nameResult.fold(
-        (err) => debugPrint('Error getting sender name: $err'),
-        (senderName) async {
-          await chatRepo.sendMessage(
+        (err) => AppLogger.error('LiveChatSheet', 'Error getting sender name', err),
+        (_) {
+          _chatCubit.sendMessage(
             widget.chatId,
             text: text,
-            senderId: _myUid,
-            senderName: senderName,
+            senderId: _myUid!,
           );
           Future.delayed(const Duration(milliseconds: 100), _scrollToBottom);
         },
       );
     } catch (e) {
-      debugPrint('Error sending message: $e');
+      AppLogger.error('LiveChatSheet', 'Error sending message', e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final chatRepo = getIt<ChatRepo>();
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Padding(
@@ -171,7 +174,7 @@ class _LiveChatSheetState extends State<LiveChatSheet> {
               // Messages Stream
               Expanded(
                 child: StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: chatRepo.streamMessages(widget.chatId),
+                  stream: _chatCubit.streamMessages(widget.chatId),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Center(

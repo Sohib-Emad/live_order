@@ -38,4 +38,12 @@ class ChatApi {
   Future<Map<String, dynamic>?> getUserDoc(String userId) async {
     return await supabase.from('users').select().eq('uid', userId).single();
   }
+
+  // Stream user data by user ID
+  Stream<List<Map<String, dynamic>>> streamUserById(String userId) {
+    return supabase
+        .from('users')
+        .stream(primaryKey: ['uid'])
+        .map((list) => list.where((r) => r['uid'] == userId).toList());
+  }
 }

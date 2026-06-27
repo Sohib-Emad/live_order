@@ -1,6 +1,7 @@
 // lib/features/user_notifications/logic/state.dart
 
 import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
+export 'package:live_order/features/user_notifications/data/model/notification_model.dart';
 
 abstract class NotificationsState {}
 

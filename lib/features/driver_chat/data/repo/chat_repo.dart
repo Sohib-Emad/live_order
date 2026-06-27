@@ -56,4 +56,9 @@ class ChatRepo {
       return Left(e.toString());
     }
   }
+
+  // Stream user data by user ID
+  Stream<List<Map<String, dynamic>>> streamClientData(String clientId) {
+    return _chatApi.streamUserById(clientId);
+  }
 }

@@ -2,10 +2,10 @@
 
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/features/user_chat/data/model/chat_message.dart';
 import 'package:live_order/features/user_chat/data/repository/chat_repository.dart';
 import 'package:live_order/features/user_chat/logic/state.dart';
+
 
 class MarketChatCubit extends Cubit<MarketChatState> {
   final MarketChatRepository _repository;
@@ -14,11 +14,11 @@ class MarketChatCubit extends Cubit<MarketChatState> {
   String? _currentUserId;
 
   MarketChatCubit(this._repository) : super(MarketChatInitial()) {
-    _currentUserId = SupabaseService.instance.client.auth.currentUser?.id;
+    _currentUserId = _repository.getCurrentUserId();
   }
 
   Future<void> loadMessages(String driverId) async {
-    final myUid = _currentUserId ?? SupabaseService.instance.client.auth.currentUser?.id;
+    final myUid = _currentUserId ?? _repository.getCurrentUserId();
     if (myUid == null) {
       emit(MarketChatError('يجب تسجيل الدخول أولاً للوصول للدردشة.'));
       return;
@@ -28,25 +28,7 @@ class MarketChatCubit extends Cubit<MarketChatState> {
     emit(MarketChatLoading());
 
     try {
-      // 1. Query database for orders where myUid is client and driverId is driver
-      final query1 = await SupabaseService.instance.client
-          .from('orders')
-          .select()
-          .eq('order_user_id', myUid)
-          .eq('driver_id', driverId);
-
-      // 2. Query database for orders where driverId is client and myUid is driver
-      final query2 = await SupabaseService.instance.client
-          .from('orders')
-          .select()
-          .eq('order_user_id', driverId)
-          .eq('driver_id', myUid);
-
-      final allDocs = [...query1, ...query2];
-      final hasActiveAcceptedOrder = allDocs.any((doc) {
-        final status = doc['order_status'] ?? doc['status'] ?? '';
-        return status == 'Accepted' || status == 'In Transit';
-      });
+      final hasActiveAcceptedOrder = await _repository.hasActiveAcceptedOrder(myUid, driverId);
 
       if (!hasActiveAcceptedOrder) {
         emit(MarketChatRestricted(

@@ -72,6 +72,17 @@ class DriverCubit extends Cubit<DriverState> {
     );
   }
 
+  Future<void> updateDriverAvailability({required String uid, required bool isAvailable}) async {
+    emit(DriverLoading());
+    final result = await driverRepo.updateDriverStatus(uid, isAvailable);
+    result.fold(
+      (error) => emit(DriverError(message: error)),
+      (_) => emit(DriverSuccess(
+        message: isAvailable ? 'أنت الآن متاح لاستقبال الطلبات' : 'تم إيقاف استقبال الطلبات',
+      )),
+    );
+  }
+
   Future<void> updateShipmentStatus(String shipmentId, String status) async {
     emit(DriverLoading());
     final result = await driverRepo.updateShipmentStatus(shipmentId, status);

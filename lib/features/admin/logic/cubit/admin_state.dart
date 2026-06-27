@@ -1,24 +1,44 @@
 part of 'admin_cubit.dart';
 
-sealed class AdminState {}
+abstract class AdminState extends Equatable {
+  const AdminState();
 
-final class AdminInitial extends AdminState {}
+  @override
+  List<Object?> get props => [];
+}
 
-final class AdminLoading extends AdminState {}
+class AdminInitial extends AdminState {
+  const AdminInitial();
+}
 
-final class AdminLoaded extends AdminState {
+class AdminLoading extends AdminState {
+  const AdminLoading();
+}
+
+class AdminLoaded extends AdminState {
   final List<UserProfile> users;
   final List<Shipment> orders;
 
-  AdminLoaded({required this.users, required this.orders});
+  const AdminLoaded({required this.users, required this.orders});
+
+  @override
+  List<Object?> get props => [users, orders];
 }
 
-final class AdminActionSuccess extends AdminState {
+class AdminActionSuccess extends AdminState {
   final String message;
-  AdminActionSuccess({required this.message});
+
+  const AdminActionSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
 
-final class AdminError extends AdminState {
+class AdminError extends AdminState {
   final String message;
-  AdminError({required this.message});
+
+  const AdminError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

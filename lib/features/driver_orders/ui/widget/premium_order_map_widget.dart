@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:live_order/core/models/shipment.dart';
+import 'package:live_order/core/utils/logger.dart';
 
 class PremiumOrderMapWidget extends StatefulWidget {
   final Shipment order;
@@ -50,7 +51,7 @@ class _PremiumOrderMapWidgetState extends State<PremiumOrderMapWidget> {
           CameraUpdate.newLatLngBounds(bounds, 50.w),
         );
       } catch (e) {
-        debugPrint("Error animating camera to bounds: $e");
+        AppLogger.error('PremiumOrderMap', 'Error animating camera to bounds', e);
       }
     });
   }

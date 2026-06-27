@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
 import 'package:live_order/features/user_notifications/logic/cubit.dart';
 import 'package:live_order/features/user_notifications/logic/state.dart';
 import 'package:live_order/features/user_notifications/ui/widget/notification_empty_state.dart';

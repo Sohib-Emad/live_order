@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/utils/logger.dart';
 import 'package:live_order/features/admin/data/repo/admin_repo.dart';
@@ -16,7 +17,7 @@ class AdminCubit extends Cubit<AdminState> {
   List<UserProfile> _allUsers = [];
   List<Shipment> _allOrders = [];
 
-  AdminCubit({required this.adminRepo}) : super(AdminInitial());
+  AdminCubit({required this.adminRepo}) : super(const AdminInitial());
 
   void _subscribeToUsers() {
     _usersSubscription?.cancel();
@@ -42,7 +43,7 @@ class AdminCubit extends Cubit<AdminState> {
 
   void initAdminDashboard() {
     AppLogger.info('AdminCubit', 'initAdminDashboard called');
-    emit(AdminLoading());
+    emit(const AdminLoading());
     _subscribeToUsers();
     _subscribeToOrders();
   }

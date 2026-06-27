@@ -24,4 +24,27 @@ class DriversApi {
       throw Exception('Failed to fetch drivers list from database: $e');
     }
   }
+
+  Future<void> reportDriver({
+    required String driverId,
+    required String driverName,
+    required String reporterId,
+    required String reason,
+  }) async {
+    try {
+      await supabase.from('reports').insert({
+        'driver_id': driverId,
+        'driver_name': driverName,
+        'reporter_id': reporterId,
+        'reason': reason,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      throw Exception('Failed to report driver: $e');
+    }
+  }
+
+  String? getCurrentUserId() {
+    return supabase.auth.currentUser?.id;
+  }
 }

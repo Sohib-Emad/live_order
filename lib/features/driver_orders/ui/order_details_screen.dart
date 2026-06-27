@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/models/shipment.dart';
-import 'package:live_order/core/services/supabase_service.dart';
+import 'package:live_order/features/driver_orders/logic/cubit/add_order_cubit.dart';
 import 'package:live_order/features/driver_orders/ui/widget/order_details_body.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
@@ -16,10 +17,7 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: SupabaseService.instance.client
-          .from('orders')
-          .stream(primaryKey: ['id'])
-          .map((list) => list.where((r) => r['id'] == order.id).toList()),
+      stream: context.read<AddOrderCubit>().streamOrder(order.id),
       builder: (context, snapshot) {
         final ordersList = snapshot.data ?? [];
         final currentOrder = ordersList.isNotEmpty

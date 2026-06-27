@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/services/supabase_service.dart';
-import 'package:live_order/features/user_notifications/data/model/notification_model.dart';
 import 'package:live_order/features/user_notifications/data/repository/notifications_repository.dart';
 import 'package:live_order/features/user_notifications/logic/state.dart';
 

@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/core/utils/animated_snack_dialog.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/driver_home/logic/cubit/driver_cubit.dart';
@@ -12,6 +11,7 @@ import 'package:live_order/core/models/shipment.dart';
 import 'package:live_order/core/models/user_profile.dart';
 import 'package:live_order/core/constants/app_design.dart';
 import 'package:live_order/core/di/di.dart';
+import 'package:live_order/features/driver_home/data/repo/driver_repo.dart';
 import 'package:live_order/features/user_account/ui/user_profile_screen.dart';
 import 'package:live_order/features/user_account/logic/cubit/user_cubit.dart';
 
@@ -68,18 +68,16 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   void _syncChatListeners(List<Shipment> orders) {
     final currentChatIds = <String>{};
+    final repo = getIt<DriverRepo>();
     for (var order in orders) {
       if (order.driverId.isNotEmpty) {
         final chatId = '${order.clientId}_${order.driverId}';
         currentChatIds.add(chatId);
         if (!_chatSubscriptions.containsKey(chatId)) {
-          _chatSubscriptions[chatId] = SupabaseService.instance.client
-              .from('chat_messages')
-              .stream(primaryKey: ['id'])
-              .map((list) => list.where((r) => r['chat_id'] == chatId).toList())
+          _chatSubscriptions[chatId] = repo
+              .streamChatMessages(chatId)
               .listen((messages) {
-                final myUid =
-                    SupabaseService.instance.client.auth.currentUser?.id;
+                final myUid = repo.currentUid;
                 final unreadCount = messages.where((data) {
                   final senderId = data['sender_id'];
                   final isRead = data['is_read'] ?? false;
@@ -120,15 +118,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     _requestNotificationPermissions();
 
     // Cache the main orders stream - MUST be done once in initState
-    _ordersStream = SupabaseService.instance.client
-        .from('orders')
-        .stream(primaryKey: ['id'])
-        .map(
-          (list) => list
-              .where((r) => r['driver_id'] == widget.driver.uid)
-              .map((d) => Shipment.fromJson(d))
-              .toList(),
-        );
+    _ordersStream = getIt<DriverRepo>().streamDriverOrders(widget.driver.uid);
 
     // Start listening to orders to sync chat unread counts in background
     _ordersSubscription = _ordersStream.listen((orders) {
@@ -155,23 +145,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     } catch (_) {}
   }
 
-  void _toggleAvailability(bool val) async {
+  void _toggleAvailability(bool val) {
     setState(() => _isAvailable = val);
-    try {
-      await SupabaseService.instance.client
-          .from('users')
-          .update({'is_available': val})
-          .eq('uid', widget.driver.uid);
-      if (mounted) {
-        showAnimatedSnackDialog(
-          context,
-          message: val
-              ? 'أنت الآن متاح لاستقبال الطلبات'
-              : 'تم إيقاف استقبال الطلبات',
-          type: AnimatedSnackBarType.info,
-        );
-      }
-    } catch (_) {}
+    context.read<DriverCubit>().updateDriverAvailability(
+      uid: widget.driver.uid,
+      isAvailable: val,
+    );
   }
 
   @override
@@ -232,7 +211,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                   if (state is DriverSuccess) {
                     showAnimatedSnackDialog(
                       ctx,
-                      message: 'تم تحديث حالة الشحنة بنجاح!',
+                      message: state.message,
                       type: AnimatedSnackBarType.success,
                     );
                   } else if (state is DriverError) {

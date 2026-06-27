@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:live_order/core/models/user_profile.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:live_order/core/models/shipment.dart';
-import 'package:live_order/features/session/data/repo/home_repo.dart';
+import 'package:live_order/core/models/user_profile.dart';
+import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/core/utils/logger.dart';
+import 'package:live_order/features/session/data/repo/home_repo.dart';
 import 'package:live_order/features/session/logic/home_logic_helper.dart';
-
-part 'home_state.dart';
+import 'package:live_order/features/session/logic/state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   final HomeRepo homeRepo;
@@ -26,16 +25,23 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit({required this.homeRepo}) : super(HomeInitial());
 
-  late String _currentUid;
+  String _currentUid = '';
 
   // Initialize and stream all active Supabase changes
-  void initHome(String uid) {
-    AppLogger.info('HomeCubit', 'initHome called for uid: $uid');
+  void initHome() {
+    final uid = homeRepo.getCurrentUid();
+    if (uid == null) {
+      emit(HomeError(message: 'لم يتم تسجيل الدخول'));
+      return;
+    }
     _currentUid = uid;
+    AppLogger.info('HomeCubit', 'initHome called for uid: $uid');
     emit(HomeLoading());
     _subscribeToUser();
     _subscribeToOrders();
   }
+
+  String get currentUid => _currentUid;
 
   void _subscribeToUser() {
     _userSubscription?.cancel();
@@ -77,12 +83,8 @@ class HomeCubit extends Cubit<HomeState> {
         final chatId = '${order.clientId}_${order.driverId}';
         currentChatIds.add(chatId);
         if (!_chatSubscriptions.containsKey(chatId)) {
-          _chatSubscriptions[chatId] = SupabaseService.instance.client
-              .from('chat_messages')
-              .stream(primaryKey: ['id'])
-              .map((list) => list.where((r) => r['chat_id'] == chatId).toList())
-              .listen((messages) {
-                final myUid = SupabaseService.instance.client.auth.currentUser?.id;
+          _chatSubscriptions[chatId] = homeRepo.streamChatMessages(chatId).listen((messages) {
+                final myUid = _currentUid;
                 final unreadCount = messages.where((data) {
                   final senderId = data['sender_id'];
                   final isRead = data['is_read'] ?? false;
@@ -171,6 +173,10 @@ class HomeCubit extends Cubit<HomeState> {
         unreadNotificationsCount: unreadNotificationsCount,
       ));
     }
+  }
+
+  Future<void> signOut() async {
+    await SupabaseService.instance.client.auth.signOut();
   }
 
   // Update user saved address (Home/Work) in Firestore

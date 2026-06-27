@@ -5,19 +5,18 @@ import 'package:live_order/features/user_home/logic/state.dart';
 class ClientDashboardCubit extends Cubit<ClientDashboardState> {
   final ClientDashboardRepository _repository;
 
-  ClientDashboardCubit(this._repository) : super(ClientDashboardInitial());
+  ClientDashboardCubit(this._repository) : super(const ClientDashboardInitial());
 
   Future<void> loadDashboard() async {
-    emit(ClientDashboardLoading());
-    try {
-      final data = await _repository.getDashboard();
-      emit(ClientDashboardLoaded(
+    emit(const ClientDashboardLoading());
+    final result = await _repository.getDashboard();
+    result.fold(
+      (error) => emit(ClientDashboardError(error)),
+      (data) => emit(ClientDashboardLoaded(
         activeShipments: data.activeShipments,
         topDrivers: data.topDrivers,
         recentOrders: data.recentOrders,
-      ));
-    } catch (e) {
-      emit(ClientDashboardError(e.toString()));
-    }
+      )),
+    );
   }
 }

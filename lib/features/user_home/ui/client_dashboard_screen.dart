@@ -14,6 +14,7 @@ import 'package:live_order/features/user_payments/logic/cubit.dart';
 import 'package:live_order/features/user_payments/ui/screen.dart';
 import 'package:live_order/features/user_profile/ui/screen.dart';
 import 'package:live_order/features/session/logic/cubit/home_cubit.dart';
+import 'package:live_order/features/session/logic/state.dart';
 
 class ClientDashboardScreen extends StatefulWidget {
   const ClientDashboardScreen({super.key});

@@ -9,6 +9,7 @@ import 'package:live_order/core/utils/animated_snack_dialog.dart';
 import 'package:live_order/core/widgets/auth_background.dart';
 import 'package:live_order/core/widgets/spacing_widgets.dart';
 import 'package:live_order/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:live_order/features/auth/logic/state.dart';
 import 'package:live_order/features/auth/widget/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen>
                           }
                         },
                         builder: (context, state) {
-                          final isLoading = state is AuthLoadind;
+                          final isLoading = state is AuthLoading;
 
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,

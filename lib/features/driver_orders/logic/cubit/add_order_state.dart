@@ -1,19 +1,38 @@
 part of 'add_order_cubit.dart';
 
-sealed class AddOrderState {}
+abstract class AddOrderState extends Equatable {
+  const AddOrderState();
 
-final class AddOrderInitial extends AddOrderState {}
-
-final class AddOrderLoading extends AddOrderState {}
-
-final class AddOrderSuccess extends AddOrderState {}
-
-final class DriversLoaded extends AddOrderState {
-  final List<UserProfile> drivers;
-  DriversLoaded({required this.drivers});
+  @override
+  List<Object?> get props => [];
 }
 
-final class AddOrderError extends AddOrderState {
+class AddOrderInitial extends AddOrderState {
+  const AddOrderInitial();
+}
+
+class AddOrderLoading extends AddOrderState {
+  const AddOrderLoading();
+}
+
+class AddOrderSuccess extends AddOrderState {
+  const AddOrderSuccess();
+}
+
+class DriversLoaded extends AddOrderState {
+  final List<UserProfile> drivers;
+
+  const DriversLoaded({required this.drivers});
+
+  @override
+  List<Object?> get props => [drivers];
+}
+
+class AddOrderError extends AddOrderState {
   final String message;
-  AddOrderError({required this.message});
+
+  const AddOrderError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }

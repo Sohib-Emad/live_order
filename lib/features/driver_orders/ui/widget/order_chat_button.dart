@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:live_order/core/services/supabase_service.dart';
 import 'package:live_order/features/driver_chat/ui/widgets/live_chat_sheet.dart';
+import 'package:live_order/features/driver_orders/logic/cubit/add_order_cubit.dart';
 
 class OrderChatButton extends StatelessWidget {
   final bool isDriver;
@@ -23,10 +24,7 @@ class OrderChatButton extends StatelessWidget {
     if (otherUserId.isEmpty) return const SizedBox.shrink();
 
     return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: SupabaseService.instance.client
-          .from('users')
-          .stream(primaryKey: ['uid'])
-          .map((list) => list.where((r) => r['uid'] == otherUserId).toList()),
+      stream: context.read<AddOrderCubit>().streamUser(otherUserId),
       builder: (context, snapshot) {
         final usersList = snapshot.data ?? [];
         final data = usersList.isNotEmpty ? usersList.first : null;

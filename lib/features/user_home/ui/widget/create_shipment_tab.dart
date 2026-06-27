@@ -4,6 +4,7 @@ import 'package:live_order/core/di/di.dart';
 import 'package:live_order/features/user_create_shipment/logic/cubit.dart';
 import 'package:live_order/features/user_create_shipment/ui/screen.dart';
 import 'package:live_order/features/session/logic/cubit/home_cubit.dart';
+import 'package:live_order/features/session/logic/state.dart';
 import 'package:live_order/features/user_home/ui/widget/active_shipment_alert.dart';
 
 class CreateShipmentTab extends StatelessWidget {

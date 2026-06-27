@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:live_order/core/constants/app_design.dart';
-import 'package:live_order/features/user_payments/data/model/payment_models.dart';
 import 'package:live_order/core/widgets/status_badge.dart';
+import 'package:live_order/features/user_payments/logic/state.dart';
 
 class PaymentHistoryList extends StatelessWidget {
   final List<PaymentTransaction> transactions;

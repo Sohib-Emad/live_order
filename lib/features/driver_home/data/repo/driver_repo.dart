@@ -8,6 +8,8 @@ class DriverRepo {
 
   DriverRepo(this._driverApi);
 
+  String? get currentUid => _driverApi.currentUid;
+
   Future<Either<String, void>> registerDriver(UserProfile driver) async {
     try {
       await _driverApi.registerDriver(driver.toJson(), driver.uid);
@@ -33,6 +35,19 @@ class DriverRepo {
     return _driverApi.streamDriverOrders(driverId).map((list) => list
         .map((data) => Shipment.fromJson({...data, 'id': data['id']}))
         .toList());
+  }
+
+  Stream<List<Map<String, dynamic>>> streamChatMessages(String chatId) {
+    return _driverApi.streamChatMessages(chatId);
+  }
+
+  Future<Either<String, void>> updateDriverStatus(String uid, bool isAvailable) async {
+    try {
+      await _driverApi.updateDriverStatus(uid, isAvailable);
+      return const Right(null);
+    } catch (e) {
+      return Left('فشل تحديث حالة السائق: $e');
+    }
   }
 
   Future<Either<String, void>> acceptShipment(String shipmentId) async {

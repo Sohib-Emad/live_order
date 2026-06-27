@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:live_order/features/auth/models/auth_model.dart';
 import 'package:live_order/core/utils/logger.dart';
 import 'package:live_order/features/auth/repo/auth_repo.dart';
-
-part 'auth_state.dart';
+import 'package:live_order/features/auth/logic/state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepo authRepo;
@@ -12,7 +10,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   void login(String email, String password) async {
     AppLogger.info('AuthCubit', 'login called for $email');
-    emit(AuthLoadind());
+    emit(AuthLoading());
     final result = await authRepo.login(email: email, password: password);
     if (isClosed) return;
     return result.fold(
@@ -46,7 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
     File? vehicleImage,
   }) async {
     AppLogger.info('AuthCubit', 'register called for $email (role: $role)');
-    emit(AuthLoadind());
+    emit(AuthLoading());
     final result = await authRepo.register(
       email: email,
       password: password,

@@ -82,4 +82,18 @@ class AddOrderApi {
         .update({'rating': nextRating, 'trips_count': nextTrips})
         .eq('uid', driverId);
   }
+
+  Stream<List<Map<String, dynamic>>> streamOrder(String orderId) {
+    return supabase
+        .from('orders')
+        .stream(primaryKey: ['id'])
+        .map((list) => list.where((r) => r['id'] == orderId).toList());
+  }
+
+  Stream<List<Map<String, dynamic>>> streamUser(String userId) {
+    return supabase
+        .from('users')
+        .stream(primaryKey: ['uid'])
+        .map((list) => list.where((r) => r['uid'] == userId).toList());
+  }
 }
